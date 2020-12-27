@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 150px;
+  padding: 25px;
+  margin: 0 auto;
+}
+
+.hourglass {
+  width: 100px;
+
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in;
+  animation-name: flip;
+}
+
+.hourglass-frame {
+  width: 95%;
+  height: 10px;
+  margin-left: -2px;
+  background: linear-gradient(90deg, brown, orange, brown);
+}
+
+.hourglass-bowl,
+.hourglass-sand {
+  clip-path: polygon(28% 10%, 40% 0, 60% 0, 72% 10%, 87% 19%, 97% 35%, 100% 58%, 100% 100%, 0 100%, 0 58%, 3% 35%, 13% 19%);
+}
+
+.hourglass-bowl {
+  width: 90%;
+  padding: 0 3px;
+}
+
+.hourglass-bowl.top {
+  transform: rotate(180deg);
+  background: linear-gradient(225deg, blue, lightblue, white, lightblue);
+  padding-bottom: 2px;
+}
+
+.hourglass-bowl.bottom {
+  background: linear-gradient(45deg, blue, lightblue, white, lightblue);
+}
+
+.hourglass-sand {
+  width: 90%;
+  height: 50px;
+  position: relative;
+  left: 5px;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+
+.hourglass-sand.top {
+  background: linear-gradient(0deg, #bbefff, orange);
+  animation-name: sand-top;
+}
+
+.hourglass-sand.bottom {
+  background: linear-gradient(0deg, orange, #bbefff);
+  animation-name: sand-bottom;
+}
+
+@keyframes sand-top {
+  0% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sand-bottom {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes flip {
+  0% {
+    transform: none;
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  85% {
+    transform: none;
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  100% {
+    transform: rotate(180deg);
+    margin-left: -10px;
+    margin-top: 5px;
+  }
+}

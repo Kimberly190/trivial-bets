@@ -1,0 +1,88 @@
+{
+  "players": [
+    {
+      "id": 1,
+      "playerNumber": 1,
+      "name": "Anna"
+    },
+    {
+      "id": 2,
+      "playerNumber": 2,
+      "name": "Bob"
+    },
+    {
+      "id": 3,
+      "playerNumber": 3,
+      "name": "Chen"
+    },
+    {
+      "id": 4,
+      "playerNumber": 4,
+      "name": "Dahyeon"
+    }
+  ],
+  "answers": [
+    {
+      "id": 1,
+      "playerId": 1,
+      "guess": 13000
+    },
+    {
+      "id": 2,
+      "playerId": 2,
+      "guess": 20000
+    },
+    {
+      "id": 3,
+      "playerId": 3,
+      "guess": 10000
+    },
+    {
+      "id": 4,
+      "playerId": 4,
+      "guess": 13001
+    }
+  ],
+  "bets" : [
+    {
+      "playerId": 1,
+      "answerId": 3,
+      "amount": 6
+    },
+    {
+      "playerId": 1,
+      "answerId": 2,
+      "amount": 4
+    },
+    {
+      "playerId": 2,
+      "answerId": 2,
+      "amount": 1
+    },
+    {
+      "playerId": 2,
+      "answerId": 2,
+      "amount": 3
+    },
+    {
+      "playerId": 3,
+      "answerId": 0,
+      "amount": 9
+    },
+    {
+      "playerId": 3,
+      "answerId": 1,
+      "amount": 1
+    },
+    {
+      "playerId": 4,
+      "answerId": 4,
+      "amount": 2
+    },
+    {
+      "playerId": 4,
+      "answerId": 4,
+      "amount": 1
+    }
+  ]
+}

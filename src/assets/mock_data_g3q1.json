@@ -1,0 +1,239 @@
+{
+  "gameRoom": {
+    "id": 2
+  },
+  "players": [
+    {
+      "id": 9,
+      "playerNumber": 1,
+      "name": "Anna",
+      "isHost": true,
+      "gameRoomId": 3
+    },
+    {
+      "id": 10,
+      "playerNumber": 2,
+      "name": "Bob",
+      "gameRoomId": 3
+    },
+    {
+      "id": 11,
+      "playerNumber": 3,
+      "name": "Chen",
+      "gameRoomId": 3
+    },
+    {
+      "id": 12,
+      "playerNumber": 4,
+      "name": "Dahyeon",
+      "gameRoomId": 3
+    },
+    {
+      "id": 13,
+      "playerNumber": 5,
+      "name": "Ethel",
+      "gameRoomId": 3
+    }
+    ,
+    {
+      "id": 14,
+      "playerNumber": 6,
+      "name": "Farhad",
+      "gameRoomId": 3
+    }
+    ,
+    {
+      "id": 15,
+      "playerNumber": 7,
+      "name": "Geraldo",
+      "gameRoomId": 3
+    }
+  ],
+  "question": {
+    "id": 6,
+    "gameRoomId": 3,
+    "correctAnswer": 45
+  },
+  "answers": [
+    {
+      "id": 23,
+      "playerId": 0,
+      "guess": -1
+    },
+    {
+      "id": 24,
+      "guess": -1,
+      "playerId": 0,
+      "player": null,
+      "questionId": 6,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 25,
+      "guess": 30,
+      "playerId": 9,
+      "player": null,
+      "questionId": 6,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 26,
+      "guess": 90,
+      "playerId": 10,
+      "player": null,
+      "questionId": 6,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 27,
+      "guess": 40,
+      "playerId": 11,
+      "player": null,
+      "questionId": 6,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 28,
+      "guess": 80,
+      "playerId": 12,
+      "player": null,
+      "questionId": 6,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 29,
+      "guess": 50,
+      "playerId": 13,
+      "player": null,
+      "questionId": 6,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 30,
+      "guess": 70,
+      "playerId": 14,
+      "player": null,
+      "questionId": 6,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 31,
+      "guess": 60,
+      "playerId": 15,
+      "player": null,
+      "questionId": 6,
+      "question": null,
+      "bets": null
+    }
+  ],
+  "bets": [
+    {
+      "id": 35,
+      "amount": 1,
+      "payout": 5,
+      "playerId": 10,
+      "answerId": 24
+    },
+    {
+      "id": 36,
+      "amount": 1,
+      "payout": 3,
+      "playerId": 10,
+      "answerId": 26
+    },
+    {
+      "id": 37,
+      "amount": 1,
+      "payout": 3,
+      "playerId": 11,
+      "answerId": 26
+    },
+    {
+      "id": 38,
+      "amount": 1,
+      "payout": 2,
+      "playerId": 12,
+      "answerId": 27
+    },
+    {
+      "id": 39,
+      "amount": 1,
+      "payout": 3,
+      "playerId": 13,
+      "answerId": 28
+    },
+    {
+      "id": 40,
+      "amount": 1,
+      "payout": 4,
+      "playerId": 14,
+      "answerId": 29
+    },
+    {
+      "id": 41,
+      "amount": 1,
+      "payout": 6,
+      "playerId": 15,
+      "answerId": 23
+    },
+    {
+      "id": 42,
+      "amount": 1,
+      "payout": 5,
+      "playerId": 9,
+      "answerId": 24
+    },
+    {
+      "id": 43,
+      "amount": 1,
+      "payout": 6,
+      "playerId": 10,
+      "answerId": 23
+    },
+    {
+      "id": 44,
+      "amount": 1,
+      "payout": 3,
+      "playerId": 11,
+      "answerId": 26
+    },
+    {
+      "id": 45,
+      "amount": 1,
+      "payout": 3,
+      "playerId": 12,
+      "answerId": 28
+    },
+    {
+      "id": 46,
+      "amount": 1,
+      "payout": 6,
+      "playerId": 13,
+      "answerId": 23
+    },
+    {
+      "id": 47,
+      "amount": 1,
+      "payout": 4,
+      "playerId": 14,
+      "answerId": 29
+    },
+    {
+      "id": 48,
+      "amount": 1,
+      "payout": 6,
+      "playerId": 15,
+      "answerId": 23
+    }
+  ],
+  "results": [
+
+  ]
+}

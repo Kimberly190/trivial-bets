@@ -1,0 +1,157 @@
+{
+  "gameRoom": {
+    "id": 1
+  },
+  "players": [
+    {
+      "id": 1,
+      "playerNumber": 1,
+      "name": "Anna",
+      "isHost": true,
+      "gameRoomId": 1
+    },
+    {
+      "id": 2,
+      "playerNumber": 2,
+      "name": "Bob",
+      "gameRoomId": 1
+    },
+    {
+      "id": 3,
+      "playerNumber": 3,
+      "name": "Chen",
+      "gameRoomId": 1
+    }
+  ],
+  "question": {
+    "id": 4,
+    "gameRoomId": 1,
+    "correctAnswer": 80
+  },
+  "answers": [
+    {
+      "id": 13,
+      "guess": -1,
+      "playerId": 0,
+      "player": null,
+      "questionId": 3,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 14,
+      "guess": 100,
+      "playerId": 1,
+      "player": null,
+      "questionId": 3,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 15,
+      "guess": 75,
+      "playerId": 2,
+      "player": null,
+      "questionId": 3,
+      "question": null,
+      "bets": null
+    },
+    {
+      "id": 16,
+      "guess": 90,
+      "playerId": 3,
+      "player": null,
+      "questionId": 3,
+      "question": null,
+      "bets": null
+    }
+  ],
+  "bets": [
+    {
+      "id": 19,
+      "amount": 7,
+      "payout": 5,
+      "playerId": 1,
+      "player": null,
+      "answerId": 16,
+      "answer": null
+    },
+    {
+      "id": 20,
+      "amount": 1,
+      "payout": 3,
+      "playerId": 1,
+      "player": null,
+      "answerId": 17,
+      "answer": null
+    },
+    {
+      "id": 21,
+      "amount": 1,
+      "payout": 5,
+      "playerId": 2,
+      "player": null,
+      "answerId": 17,
+      "answer": null
+    },
+    {
+      "id": 22,
+      "amount": 3,
+      "payout": 5,
+      "playerId": 2,
+      "player": null,
+      "answerId": 17,
+      "answer": null
+    },
+    {
+      "id": 23,
+      "amount": 3,
+      "payout": 6,
+      "playerId": 3,
+      "player": null,
+      "answerId": 13,
+      "answer": null
+    },
+    {
+      "id": 24,
+      "amount": 1,
+      "payout": 3,
+      "playerId": 3,
+      "player": null,
+      "answerId": 13,
+      "answer": null
+    }
+  ],
+  "results": [
+    {
+      "isBestGuess": true,
+      "credit": 3,
+      "playerId": 1,
+      "player": null
+    },
+    {
+      "isBestGuess": true,
+      "credit": 3,
+      "playerId": 2,
+      "player": null
+    },
+    {
+      "isBestGuess": false,
+      "credit": 5,
+      "playerId": 1,
+      "player": null
+    },
+    {
+      "isBestGuess": false,
+      "credit": 15,
+      "playerId": 3,
+      "player": null
+    },
+    {
+      "isBestGuess": false,
+      "credit": 5,
+      "playerId": 1,
+      "player": null
+    }
+  ]
+}

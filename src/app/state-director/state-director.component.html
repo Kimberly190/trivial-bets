@@ -1,0 +1,119 @@
+<!-- TODO: check issues with [hidden] at https://stackoverflow.com/questions/35578083/what-is-the-equivalent-of-ngshow-and-nghide-in-angular-2 -->
+<app-game-board id="game-board-outer" [hidden]="!showGameBoard" [laneData]="laneData" (bet)="onBet($event)"></app-game-board>
+<div id="state-director">
+  <div id="p1-welcome" [hidden]="!(page == PAGE_NUM_WELCOME)">
+    <p>Ages 8+ | 3 to 7 players</p>
+    <h2>Welcome!</h2>
+    <button (click)="hostNewGame()">Host a New Game</button>
+    <button (click)="joinGame()">Join a Game</button>
+  </div>
+  <div id="p2-new-game" [hidden]="!(page == PAGE_NUM_NEW_GAME)">
+    <h2>New Game</h2>
+    <fieldset>
+      <label>Your name:</label>
+      <input type="text" required [(ngModel)]="player.name" placeholder="name">
+    </fieldset>
+    <fieldset [hidden]="player.isHost">
+      <label>Room code:</label>
+      <input type="number" required [(ngModel)]="player.gameRoomId" placeholder="room code" />
+    </fieldset>
+    <button (click)="addPlayer()">Go!</button>
+    <button (click)="back()">&lt; Back</button>
+  </div>
+  <div id="p3-waiting" [hidden]="!(page == PAGE_NUM_WAITING)">
+    <h2>Ready?</h2>
+    <label>Share this room code with all players: <strong>{{gameRoom ? gameRoom.id : ''}}</strong><br></label>
+    <button (click)="refreshPlayers()">Refresh</button>
+    <label [hidden]="!player.isHost">Click the button to start the game.</label>
+    <label [hidden]="player.isHost">Please wait for the host to start the game, then click:</label>
+    <button (click)="nextQuestion()">Everyone's here!</button>
+  </div>
+  <div id="p4-answer-question" [hidden]="!(page == PAGE_NUM_ANSWER_Q)">
+    <h2>Question {{questionNumber}}</h2>
+    <label>Host, please read the question.<br></label>
+    <label>Everyone, enter your guess:</label>
+    <input type="number" required [(ngModel)]="answer.guess" placeholder="guess">
+    <button (click)="submitAnswer()">Submit</button>
+    <app-css-hourglass></app-css-hourglass>
+  </div>
+  <div id="p5-show-answers" [hidden]="!(page == PAGE_NUM_SHOW_A)">
+    <button (click)="refreshAnswers()">Refresh</button>
+  </div>
+  <div id="p6-bet" [hidden]="!(page == PAGE_NUM_BET)">
+    <h2>Question {{questionNumber}}</h2>
+    <h3>Betting on: {{(betAnswerValue > 0 ? betAnswerValue : 'ALL TOO HIGH')}}</h3>
+    <label>How many to bet?</label>
+    <input type="number" required [(ngModel)]="bet.amount" placeholder="amount">
+    <!-- TODO fix, plus add validation on max bet -->
+    <!-- <p>You can bet up to {{(betsPlaced == 0 ? player.score - 1 : player.score)}} chips!</p> -->
+    <button (click)="submitBet()">Submit</button>
+    <div class="bet">
+      <div class="chip placeholder"></div>
+      <div class="chip red-chip"></div>
+      <div class="chip blue-chip"></div>
+    </div>
+    <app-css-hourglass></app-css-hourglass>
+  </div>
+  <div id="p7-show-bets" [hidden]="!(page == PAGE_NUM_SHOW_BETS)">
+    <button (click)="refreshBets()">Refresh</button>
+    <fieldset [hidden]="betsPlaced < 2">
+      <label>All bets in?</label>
+      <button (click)="goToResults()">Get Results &gt;</button>
+    </fieldset>
+  </div>
+  <div id="p8-showtime" [hidden]="!(page == PAGE_NUM_SHOWTIME)">
+    <h2>Showtime!</h2>
+    <fieldset [hidden]="!player.isHost">
+      <label>Enter the correct answer:</label>
+      <input type="number" required [(ngModel)]="question.correctAnswer" placeholder="correct answer">
+      <button (click)="updateQuestionGetResults()">Submit</button>
+    </fieldset>
+    <fieldset [hidden]="player.isHost">
+      <label>Please wait for the host.<br></label>
+      <label><strong>Ready?</strong></label>
+      <button (click)="updateQuestionGetResults()">See Results &gt;</button>
+    </fieldset>
+    <app-css-hourglass></app-css-hourglass>
+  </div>
+  <div id="p9-winning-guesses" [hidden]="!(page == PAGE_NUM_WINNING_G)">
+    <h2>Question {{questionNumber}} Results</h2>
+    <label>The answer was: <strong>{{question.correctAnswer}}!</strong></label>
+    <div *ngFor="let winningGuess of winningGuesses" class="score-grid">
+      <div class="player-card player-{{winningGuess.player.playerNumber}}">
+        <h3>{{winningGuess.player.name}}</h3>
+        {{winningGuess.answer.guess}}
+      </div>
+      <div class="bet">
+        <div class="chip placeholder"></div>
+        <div class="chip red-chip">+3</div>
+      </div>
+    </div>
+    <div *ngIf="!winningGuesses?.length">
+      <label>All guesses were too high!</label>
+    </div>
+    <button (click)="getPlayerCredits()">See all results &gt;</button>
+  </div>
+  <div id="p10-score-update" [hidden]="!(page == PAGE_NUM_SCORES)">
+    <h2>Scores: Question {{questionNumber}}</h2>
+    <div class="score-grid">
+      <div *ngFor="let result of otherResults" class="player-card player-{{result.player.playerNumber}}">
+        <h3>{{result.player.name}}</h3>
+        {{(result.credit<0?"":"+")+result.credit}}
+      </div>
+    </div>
+    <fieldset [hidden]="player.isHost">
+      <label>Please wait for the host.<br></label>
+      <label><strong>Ready?</strong></label>
+    </fieldset>
+    <button (click)="endQuestion()">Continue &gt;</button>
+  </div>
+  <div id="p11--final scores" [hidden]="!(page == PAGE_NUM_FINAL)">
+    <h2>Final Scores!</h2>
+    <div class="score-grid">
+      <div *ngFor="let player of players" class="player-card player-{{player.playerNumber}}">
+        <h3>{{player.name}}</h3>
+        {{player.score}}
+      </div>
+    </div>
+  </div>
+</div>

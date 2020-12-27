@@ -1,0 +1,140 @@
+{
+  "gameRoom": {
+    "id": 2
+  },
+  "players": [
+    {
+      "id": 4,
+      "playerNumber": 1,
+      "name": "Anna",
+      "isHost": true,
+      "gameRoomId": 2
+    },
+    {
+      "id": 5,
+      "playerNumber": 2,
+      "name": "Bob",
+      "gameRoomId": 2
+    },
+    {
+      "id": 6,
+      "playerNumber": 3,
+      "name": "Chen",
+      "gameRoomId": 2
+    },
+    {
+      "id": 7,
+      "playerNumber": 4,
+      "name": "Dahyeon",
+      "gameRoomId": 2
+    },
+    {
+      "id": 8,
+      "playerNumber": 5,
+      "name": "Ethel",
+      "gameRoomId": 2
+    }
+  ],
+  "question": {
+    "id": 5,
+    "gameRoomId": 2,
+    "correctAnswer": 1925
+  },
+  "answers": [
+    {
+      "id": 17,
+      "playerId": 0,
+      "guess": -1
+    },
+    {
+      "id": 18,
+      "playerId": 4,
+      "guess": 1918
+    },
+    {
+      "id": 19,
+      "playerId": 5,
+      "guess": 1925
+    },
+    {
+      "id": 20,
+      "playerId": 6,
+      "guess": 1925
+    },
+    {
+      "id": 21,
+      "playerId": 7,
+      "guess": 1926
+    },
+    {
+      "id": 22,
+      "playerId": 8,
+      "guess": 1931
+    }
+  ],
+  "bets": [
+    {
+      "id": 25,
+      "playerId": 4,
+      "answerId": 17,
+      "amount": 6
+    },
+    {
+      "id": 26,
+      "playerId": 4,
+      "answerId": 17,
+      "amount": 1
+    },
+    {
+      "id": 27,
+      "playerId": 5,
+      "answerId": 19,
+      "amount": 1
+    },
+    {
+      "id": 28,
+      "playerId": 5,
+      "answerId": 19,
+      "amount": 1
+    },
+    {
+      "id": 29,
+      "playerId": 6,
+      "answerId": 17,
+      "amount": 2
+    },
+    {
+      "id": 30,
+      "playerId": 6,
+      "answerId": 17,
+      "amount": 1
+    },
+    {
+      "id": 31,
+      "playerId": 7,
+      "answerId": 21,
+      "amount": 8
+    },
+    {
+      "id": 32,
+      "playerId": 7,
+      "answerId": 21,
+      "amount": 1
+    },
+    {
+      "id": 33,
+      "playerId": 8,
+      "answerId": 21,
+      "amount": 2
+    },
+    {
+      "id": 34,
+      "playerId": 8,
+      "answerId": 17,
+      "amount": 2
+    }
+  ],
+  "results": [
+
+  ]
+}

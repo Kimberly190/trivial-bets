@@ -1,1 +1,286 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+    box-sizing: border-box;
+    --theme-color-light: #96e0a0;
+    --theme-color-mid: #4faa5b;
+    --theme-color-dark: #315a36;
+    --theme-color-accent: white;
+    --theme-color-shade: #222222;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+:root {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 20px;
+}
+
+h1 {
+    font-family: 'Luckiest Guy', 'Trebuchet MS', Arial, sans-serif;
+    font-size: 2rem;
+    text-shadow: 1px 1px 3px var(--theme-color-shade, #222222);
+    color: var(--theme-color-mid, #96e0a0);
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px var(--theme-color-shade, #222222);
+}
+
+#gameboard h2 {
+    padding: .2rem;
+
+    font-size: .9rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 3px black;
+    color: var(--theme-color-accent, white);
+    
+    display: block;
+}
+
+h3, .player-card {
+    font-family: 'Segoe Print', Arial, Helvetica, sans-serif;
+    line-height: 1.15;
+}
+
+fieldset {
+  border: none;
+}
+
+#gameboard {
+    max-width: 1000px;
+    height: 70vh;
+    min-height: 300px;
+    margin: auto;
+    padding: 0 2vw;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.lane {
+    flex: 1 1;
+    margin: .5vw;
+
+    background-color: var(--theme-color-light, #96e0a0);
+    border: 2px solid var(--theme-color-dark, #315a36);
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px 0 #888888;
+
+    display: grid;
+    grid-template-rows: max-content 10vh auto max-content;
+    grid-template-columns: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.lane-space {
+    position: relative;
+    max-height: 40vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    flex-wrap: wrap;
+}
+
+#undercut-lane {
+    grid-row: 2 / 4;
+    grid-column: 1 / 2;
+}
+
+#watermark {
+    position: absolute;
+    /* TODO - 35% isn't perfect - change to have text float centrally within an outer absolute div? */
+    left: 35%;
+    top: 5%;
+
+    writing-mode: vertical-rl;
+    font-weight: bold;
+    font-size: 1.25rem;
+    opacity: 0.3;
+}
+
+.player-card {
+    margin: .2rem;
+
+    font-size: 0.75rem;
+    border-radius: 5px;
+}
+
+.bet {
+    position: relative;
+    margin: .5rem .2rem;
+}
+
+.chip, .bet-button {
+    width: 10vw;
+    max-width: 60px;
+    height: 10vw;
+    max-height: 60px;
+    margin: auto;
+
+    border-radius: 50%;
+    font-weight: bold;
+    color: var(--theme-color-accent, white);
+}
+
+.chip {
+    border: 2px dashed white;
+    box-shadow: 3px 3px 5px #888888;
+}
+
+.placeholder {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.red-chip {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    background-color: red;
+}
+
+.blue-chip {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+
+    background-color: blue;
+}
+
+.player-chip {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: black;
+}
+
+.bet-button {
+    background-color: green;
+    border: 1px solid #333333;
+    box-shadow: 3px 3px 5px #888888, inset 0 0 10px #333333;
+    text-transform: uppercase;
+
+    padding: 5px;
+}
+
+.bet-button:hover {
+    border: 1px solid white;
+    box-shadow: 3px 3px 5px #888888, inset 0 0 20px white;
+}
+
+#status-bench {
+    position: fixed;
+    width: 100%;
+    height: 80px;
+    left: 0;
+    bottom: 0;
+    padding: .2rem;
+
+    background-color: lightgray;
+
+    display: flex;
+}
+
+/* TODO move */
+main {
+  margin-bottom: 80px;
+}
+
+.player-status {
+    margin: .2rem;
+    flex: 1 1;
+
+    border-radius: 5px;
+}
+
+@media (max-width: 550px) {
+    :root {
+      font-size: 16px;
+    }
+    #gameboard {
+        flex-direction: column-reverse;
+    }
+    .lane {
+        grid-template-columns: max-content 15vw auto max-content;
+        grid-template-rows: none;
+    }
+    #undercut-lane {
+        grid-column: 2 / 4;
+        grid-row: 1 / 2;
+    }
+    #watermark {
+        left: 0;
+        top: 50%;
+        width: 100%;
+        -ms-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        writing-mode: initial;
+    }
+    .lane-space {
+        flex-direction: row;
+    }
+    .bet {
+        margin: .2rem .5rem;
+    }
+    #status-bench {
+      height: 60px;
+    }
+    main {
+      margin-bottom: 60px;
+    }
+}
+
+/* player-specific colors */
+.player-1 {
+    background-color: white;
+    border: 2px solid red;
+}
+
+.player-2 {
+    background-color: white;
+    border: 2px solid blue;
+}
+
+.player-3 {
+    background-color: white;
+    border: 2px solid green;
+}
+
+.player-4 {
+    background-color: white;
+    border: 2px solid yellow;
+}
+
+.player-5 {
+    background-color: white;
+    border: 2px solid purple;
+}
+
+.player-6 {
+    background-color: white;
+    border: 2px solid orange;
+}
+
+.player-7 {
+    background-color: white;
+    border: 2px solid magenta;
+}
+
+.player-0 {
+    background: white;
+    border: 2px dashed black;
+}
