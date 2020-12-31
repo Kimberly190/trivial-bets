@@ -1,14 +1,18 @@
 /* TODO responsivize dimensions */
 
-#state-director {
+#wizard {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 /* TODO refine */
-#state-director * {
+#wizard * {
   margin: 10px auto;
+}
+
+#wizard #p1-welcome h2 {
+  margin: 1em auto;
 }
 
 :host(.wait, .wait *) {

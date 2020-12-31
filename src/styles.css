@@ -19,6 +19,21 @@ html {
     font-size: 20px;
 }
 
+/* NOTE: keep main bottom margin same as status bench height */
+main {
+    margin-bottom: 80px;
+}
+
+/* TODO: check (https://stackoverflow.com/questions/35578083/what-is-the-equivalent-of-ngshow-and-nghide-in-angular-2) */
+[hidden] {
+    display: none !important;
+}
+
+/* TODO refine lane hiding */
+.hidden {
+    display: none;
+}
+
 h1 {
     font-family: 'Luckiest Guy', 'Trebuchet MS', Arial, sans-serif;
     font-size: 2rem;
@@ -30,6 +45,15 @@ h2 {
     font-size: 1.5rem;
     font-weight: bold;
     text-shadow: 1px 1px 2px var(--theme-color-shade, #222222);
+}
+
+/* TODO refine behavior of hiding spinners */
+.spinner {
+    display: none;
+}
+  
+.wait .spinner {
+    display: block;
 }
 
 #gameboard h2 {
@@ -77,10 +101,6 @@ fieldset {
     grid-template-columns: none;
 }
 
-.hidden {
-  display: none;
-}
-
 .lane-space {
     position: relative;
     max-height: 40vh;
@@ -114,6 +134,7 @@ fieldset {
 
     font-size: 0.75rem;
     border-radius: 5px;
+    box-shadow: 3px 3px 5px #888888;
 }
 
 .bet {
@@ -136,6 +157,8 @@ fieldset {
 .chip {
     border: 2px dashed white;
     box-shadow: 3px 3px 5px #888888;
+    display: grid;
+    align-content: center;
 }
 
 .placeholder {
@@ -192,11 +215,6 @@ fieldset {
     background-color: lightgray;
 
     display: flex;
-}
-
-/* TODO move */
-main {
-  margin-bottom: 80px;
 }
 
 .player-status {

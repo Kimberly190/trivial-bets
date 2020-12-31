@@ -1,6 +1,6 @@
 <!-- TODO: check issues with [hidden] at https://stackoverflow.com/questions/35578083/what-is-the-equivalent-of-ngshow-and-nghide-in-angular-2 -->
 <app-game-board id="game-board-outer" [hidden]="!showGameBoard" [laneData]="laneData" (bet)="onBet($event)"></app-game-board>
-<div id="state-director">
+<div id="wizard">
   <div id="p1-welcome" [hidden]="!(page == PAGE_NUM_WELCOME)">
     <p>Ages 8+ | 3 to 7 players</p>
     <h2>Welcome!</h2>
@@ -24,9 +24,15 @@
     <h2>Ready?</h2>
     <label>Share this room code with all players: <strong>{{gameRoom ? gameRoom.id : ''}}</strong><br></label>
     <button (click)="refreshPlayers()">Refresh</button>
-    <label [hidden]="!player.isHost">Click the button to start the game.</label>
-    <label [hidden]="player.isHost">Please wait for the host to start the game, then click:</label>
-    <button (click)="nextQuestion()">Everyone's here!</button>
+    <ng-container *ngIf="player.isHost; else elseBlock">
+      <label>Click the button to start the game!</label>
+      <button (click)="nextQuestion()">Everyone's here!</button>
+    </ng-container>
+    <ng-template #elseBlock>
+      <label>Please wait for the host to start the game.</label>
+      <app-spinner class="wait"></app-spinner>
+      <button [hidden]="!canRetry" (click)="nextQuestion(false)">Check again...</button>
+    </ng-template>
   </div>
   <div id="p4-answer-question" [hidden]="!(page == PAGE_NUM_ANSWER_Q)">
     <h2>Question {{questionNumber}}</h2>
@@ -38,6 +44,7 @@
   </div>
   <div id="p5-show-answers" [hidden]="!(page == PAGE_NUM_SHOW_A)">
     <button (click)="refreshAnswers()">Refresh</button>
+    <app-spinner></app-spinner>
   </div>
   <div id="p6-bet" [hidden]="!(page == PAGE_NUM_BET)">
     <h2>Question {{questionNumber}}</h2>
@@ -56,6 +63,7 @@
   </div>
   <div id="p7-show-bets" [hidden]="!(page == PAGE_NUM_SHOW_BETS)">
     <button (click)="refreshBets()">Refresh</button>
+    <app-spinner></app-spinner>
     <fieldset [hidden]="betsPlaced < 2">
       <label>All bets in?</label>
       <button (click)="goToResults()">Get Results &gt;</button>
@@ -70,6 +78,7 @@
     </fieldset>
     <fieldset [hidden]="player.isHost">
       <label>Please wait for the host.<br></label>
+      <app-spinner></app-spinner>
       <label><strong>Ready?</strong></label>
       <button (click)="updateQuestionGetResults()">See Results &gt;</button>
     </fieldset>
@@ -103,6 +112,7 @@
     </div>
     <fieldset [hidden]="player.isHost">
       <label>Please wait for the host.<br></label>
+      <app-spinner></app-spinner>
       <label><strong>Ready?</strong></label>
     </fieldset>
     <button (click)="endQuestion()">Continue &gt;</button>

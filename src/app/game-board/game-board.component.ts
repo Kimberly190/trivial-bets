@@ -1,4 +1,4 @@
-//TODO: can this wrapper be removed now that state-director exists?  else refactor some back into here?
+//TODO: can this wrapper be removed now that wizard exists?  else refactor some back into here?
 
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
@@ -28,7 +28,7 @@ export class GameBoardComponent implements OnInit {
   }
 
   onBet(bet: models.Bet) {
-    // Forward event to state-director
+    // Forward event to wizard
     this.bet.emit(bet);
   }
   

@@ -10,17 +10,17 @@ import { GameBoardComponent } from './game-board/game-board.component';
 import { LaneComponent } from './lane/lane.component';
 import { BetComponent } from './bet/bet.component';
 import { StatusBenchComponent } from './status-bench/status-bench.component';
-import { StateDirectorComponent } from './state-director/state-director.component';
+import { WizardComponent } from './wizard/wizard.component';
 import { CssHourglassComponent } from './css-hourglass/css-hourglass.component';
-
+import { SpinnerComponent } from './spinner/spinner.component';
 import { GameApiService } from './game-api.service';
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule, HttpClientModule,
     RouterModule.forRoot([
-      { path: '', component: StateDirectorComponent }
+      { path: '', component: WizardComponent }
     ]) ],
-  declarations: [ AppComponent, HeaderComponent, GameBoardComponent, LaneComponent, BetComponent, StatusBenchComponent, StateDirectorComponent, CssHourglassComponent ],
+  declarations: [ AppComponent, HeaderComponent, GameBoardComponent, LaneComponent, BetComponent, StatusBenchComponent, WizardComponent, CssHourglassComponent, SpinnerComponent ],
   bootstrap:    [ AppComponent ],
   providers: [GameApiService]
 })

@@ -7,7 +7,8 @@ import * as models from './models';
 @Injectable()
 export class GameApiService {
 
-  private apiEndpoint = 'https://trivial-bets.azurewebsites.net/api/v1';
+  //private apiEndpoint = 'https://trivial-bets.azurewebsites.net/api/v1';
+  private apiEndpoint = 'https://localhost:5001/api/v2'
 
   NUM_LANES = 8;
   PAYOUTS = [6, 5, 4, 3, 2, 3, 4, 5];
@@ -51,13 +52,18 @@ export class GameApiService {
     return source;
   }
 
-  createQuestion(gameRoomId: number) : Observable<models.Question> {
-    return this.http.post<models.Question>(this.apiEndpoint + '/Question', { gameRoomId: gameRoomId });
+  createQuestion(gameRoomId: number, rank: number) : Observable<models.Question> {
+    return this.http.post<models.Question>(this.apiEndpoint + '/Question', { gameRoomId: gameRoomId, rank: rank });
   }
 
   getLatestQuestion(gameRoomId: number) : Observable<models.Question[]> {
     //TODO fix once API updated; currently returns all quetions and caller sorts
     return this.http.get<models.Question[]>(this.apiEndpoint + '/Question');
+  }
+
+  getQuestion(gameRoomId: number, rank: number) : Observable<models.Question> {
+    //console.log('get question ' + rank + ' for room ' + gameRoomId);
+    return this.http.get<models.Question>(this.apiEndpoint + `/GameRoom/${gameRoomId}/Question/${rank}`)
   }
 
   createAnswer(answer: models.Answer) : Observable<models.Answer> {

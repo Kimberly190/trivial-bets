@@ -1,15 +1,17 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
+import { interval } from 'rxjs';
+import { switchMap, filter, take, timeout } from 'rxjs/operators';
 
 import { GameApiService } from '../game-api.service';
 
 import * as models from '../models';
 
 @Component({
-  selector: 'app-state-director',
-  templateUrl: './state-director.component.html',
-  styleUrls: ['./state-director.component.css']
+  selector: 'app-wizard',
+  templateUrl: './wizard.component.html',
+  styleUrls: ['./wizard.component.css']
 })
-export class StateDirectorComponent implements OnInit {
+export class WizardComponent implements OnInit {
 
   DEFAULT_SCORE = 2;
   DEFAULT_ANSWER = -1;
@@ -58,6 +60,7 @@ export class StateDirectorComponent implements OnInit {
   laneData: any[] = []; //TODO remove init if not needed
   betsPlaced: number = 0;
   page: number;
+  canRetry: boolean = false;
 
   constructor(
     private gameApiService: GameApiService
@@ -78,17 +81,12 @@ export class StateDirectorComponent implements OnInit {
         this.player.gameRoomId = this.gameRoom.id;
 
         this.page++;
-        this.loading = false;
       },
       error => {
         //TODO handle
-        console.log('error creating gameRoom in state-director: ', error);
-        this.loading = false;
-      },
-      () => {
-        //TODO
+        console.log('error creating gameRoom in wizard: ', error);
       }
-    );
+    ).add(() => { this.loading = false; });
   }
 
   joinGame() {
@@ -113,21 +111,21 @@ export class StateDirectorComponent implements OnInit {
         this.player = data;
         this.gameRoom.id = this.player.gameRoomId;
 
+        console.log("created player, id: " + this.player.id + "; game room id: " + this.gameRoom.id);
+
         this.refreshPlayers();
 
         this.page++;
-        this.loading = false;
+
+        if (!this.player.isHost) {
+          this.nextQuestion();
+        }
       },
       error => {
         //TODO handle
-        console.log('error creating player in state-director: ', error);
-        this.loading = false;
-      },
-      () => {
-        //TODO
+        console.log('error creating player in wizard: ', error);
       }
-    );
-
+    ).add(() => { this.loading = false; });
   }
 
   //TODO: replace manual refresh with polling + timeout until start of game
@@ -135,7 +133,7 @@ export class StateDirectorComponent implements OnInit {
     this.gameApiService.getPlayers(this.gameRoom.id);
   }
 
-  nextQuestion() {
+  nextQuestion(incrementQuestion: boolean = true) {
     this.loading = true;
 
     if (this.questionNumber == 0) {
@@ -148,7 +146,11 @@ export class StateDirectorComponent implements OnInit {
     if (this.player.isHost) {
       // Host creates the question...
       //TODO persist question number?
-      this.gameApiService.createQuestion(this.gameRoom.id).subscribe(
+      if (incrementQuestion) {
+        this.questionNumber++; //TODO remove when data-bound?
+      }
+
+      this.gameApiService.createQuestion(this.gameRoom.id, this.questionNumber).subscribe(
         (data: models.Question) => {
           this.question = data;
           this.answer.questionId = this.question.id;
@@ -168,57 +170,66 @@ export class StateDirectorComponent implements OnInit {
             },
             error => {
               //TODO handle
-              console.log('error creating default quesiton in state-director: ', error);
-            },
-            () => {
-              //TODO
+              console.log('error creating default quesiton in wizard: ', error);
             }
           );
 
-          this.questionNumber++; //TODO remove when data-bound?
           this.page = this.PAGE_NUM_ANSWER_Q;
-          this.loading = false;
         },
         error => {
           //TODO handle
-          console.log('error creating question in state-director: ', error);
-          this.loading = false;
-        },
-        () => {
-          //TODO
+          console.log('error creating question in wizard: ', error);
         }
-      );
+      ).add(() => { this.loading = false; });
     } else {
       // ..other players just get it.
-      //TODO change to use polling with retry, delay, back-off
+      //TODO check alt method of polling with retry, delay, back-off
       //https://medium.com/angular-in-depth/retry-failed-http-requests-in-angular-f5959d486294
-      this.gameApiService.getLatestQuestion(this.gameRoom.id).subscribe(
-        (data: models.Question[]) => {
-          //TODO update after API change (will return the one question)
-          let thisGameQuestions = data.filter(q => q.gameRoomId == this.gameRoom.id);
-          thisGameQuestions.sort((q1, q2) => q2.id - q1.id);
-          this.question = thisGameQuestions[0];
 
-          this.answer.questionId = this.question.id;
-          this.answer.playerId = this.player.id;
+      this.canRetry = false;
+      // TODO move out to shared w/ host?
+      if (incrementQuestion) {
+        this.questionNumber++; //TODO remove when data-bound?
+      }
 
-          this.questionNumber++; //TODO remove when data-bound?
-          this.page = this.PAGE_NUM_ANSWER_Q;
-          this.loading = false;
-        },
+      //https://stackoverflow.com/questions/63058012/angular-rxjs-poll-http-request-until-timeout-or-positive-response-from-server
+      //TODO remove initial delay?
+      interval(5000).pipe(
+
+        switchMap(() => this.gameApiService.getQuestion(this.gameRoom.id, this.questionNumber)),
+
+        filter((data: models.Question) => {
+          //console.log('got question data: ' + JSON.stringify(data));
+          return data && data.id > 0;
+        }),
+
+        // Emit only the first value emitted by the source
+        take(1),
+
+        // Time out after 30 seconds
+        timeout(30000),
+      ).subscribe((data: models.Question) => {
+        this.question = data;
+        //console.log("subcribed to question data: " + this.question);
+
+        this.answer.questionId = this.question.id;
+        this.answer.playerId = this.player.id;
+
+        // this.questionNumber++; //TODO remove when data-bound?
+        this.page = this.PAGE_NUM_ANSWER_Q;
+      },
         error => {
           //TODO handle
-          console.log('error getting question in state-director: ', error);
-          this.loading = false;
-        },
-        () => {
-          //TODO
+          console.log('error getting question in wizard: ', error);
+          this.canRetry = true;
         }
-      );
+      ).add(() => { console.log("loading complete"); this.loading = false; });
     }
   }
 
   submitAnswer() {
+    this.loading = true;
+
     this.gameApiService.createAnswer(this.answer).subscribe(
       (data: models.Answer) => {
         this.answer = data;
@@ -228,19 +239,14 @@ export class StateDirectorComponent implements OnInit {
         this.betsPlaced = 0;
         this.showGameBoard = true;
         this.page++;
-        this.loading = false;
 
         //TODO test
         this.refreshAnswers();
       },
       error => {
         //TODO
-        this.loading = false;
-      },
-      () => {
-        //TODO
       }
-    )
+    ).add(() => { this.loading = false; });
   }
 
   refreshAnswers() {
@@ -252,18 +258,12 @@ export class StateDirectorComponent implements OnInit {
         this.defaultAnswer = this.allAnswers.find(a => a.guess == this.DEFAULT_ANSWER);
         let playerAnswers = this.allAnswers.filter(a => a.guess != this.DEFAULT_ANSWER);
         this.laneData = this.gameApiService.distributeAnswers(playerAnswers, this.gameApiService.players);
-
-        this.loading = false;
       },
       error => {
         //TODO handle
-        console.log('error refreshing answers in state-director: ', error);
-        this.loading = false;
-      },
-      () => {
-        //TODO
+        console.log('error refreshing answers in wizard: ', error);
       }
-    );
+    ).add(() => { this.loading = false; });
   }
 
   onBet(bet: models.Bet) {
@@ -299,18 +299,13 @@ export class StateDirectorComponent implements OnInit {
         this.betsPlaced++;
         this.showGameBoard = true;
 
-        this.loading = false;
-
         this.refreshBets();
       },
       error => {
         //TODO handle
-        console.log('error submitting bet in state-director: ', error);
-      },
-      () => {
-        //TODO
+        console.log('error submitting bet in wizard: ', error);
       }
-    );
+    ).add(() => { this.loading = false; });
   }
 
   refreshBets() {
@@ -320,18 +315,12 @@ export class StateDirectorComponent implements OnInit {
       (data: models.Bet[]) => {
         var bets = data;
         this.gameApiService.setBets(this.laneData, bets);
-
-        this.loading = false;
       },
       error => {
         //TODO handle
-        console.log('error refreshing answers in state-director: ', error);
-        this.loading = false;
-      },
-      () => {
-        //TODO
+        console.log('error refreshing answers in wizard: ', error);
       }
-    );
+    ).add(() => { this.loading = false; });
   }
 
   goToResults() {
@@ -346,19 +335,13 @@ export class StateDirectorComponent implements OnInit {
 
       this.gameApiService.updateQuestion(this.question).subscribe(
         data => {
-          this.loading = false;
-
           this.getResults();
         },
         error => {
           //TODO handle
-          console.log('error updating question in state-director: ', error);
-          this.loading = false;
-        },
-        () => {
-          //TODO
+          console.log('error updating question in wizard: ', error);
         }
-      );
+      ).add(() => { this.loading = false; });
     } else {
       // ..other players just get it.
       this.loading = true;
@@ -370,11 +353,13 @@ export class StateDirectorComponent implements OnInit {
           thisGameQuestions.sort((q1, q2) => q2.id - q1.id);
           this.question = thisGameQuestions[0];
 
-          this.loading = false;
-
           this.getResults();
+        },
+        error => {
+          //TODO handle
+          console.log('error getting updated question in wizard: ', error);
         }
-      )
+      ).add(() => { this.loading = false; });
     }
   }
 
@@ -397,7 +382,6 @@ export class StateDirectorComponent implements OnInit {
         this.otherResults = this.allResults.filter(r => !r.isWinningGuess);
 
         this.page++;
-        this.loading = false;
 
         if (this.player.isHost) {
           this.updateScores();
@@ -405,13 +389,9 @@ export class StateDirectorComponent implements OnInit {
       },
       error => {
         //TODO handle
-        console.log('error getting results in state-director: ', error);
-        this.loading = false;
-      },
-      () => {
-        //TODO
+        console.log('error getting results in wizard: ', error);
       }
-    );
+    ).add(() => { this.loading = false; });
   }
 
   updateScores() {
@@ -427,17 +407,13 @@ export class StateDirectorComponent implements OnInit {
 
       this.gameApiService.updatePlayer(player).subscribe(
         data => {
-          this.loading = false;
+          // nop?
         },
         error => {
           //TODO handle
-          console.log('error updating player in state-director: ', error);
-          this.loading = false;
-        },
-        () => {
-          //TODO
+          console.log('error updating player in wizard: ', error);
         }
-      )
+      ).add(() => { this.loading = false; });
     }
   }
 
