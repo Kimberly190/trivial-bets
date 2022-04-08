@@ -7,8 +7,8 @@ import * as models from './models';
 @Injectable()
 export class GameApiService {
 
-  //private apiEndpoint = 'https://trivial-bets.azurewebsites.net/api/v1';
-  private apiEndpoint = 'https://localhost:5001/api/v2'
+  private apiEndpoint = 'https://trivial-bets.azurewebsites.net/api/v1';
+  //private apiEndpoint = 'https://localhost:5001/api/v2'
 
   NUM_LANES = 8;
   PAYOUTS = [6, 5, 4, 3, 2, 3, 4, 5];
