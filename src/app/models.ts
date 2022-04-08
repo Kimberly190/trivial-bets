@@ -29,13 +29,16 @@ export interface Bet {
   amount: number,
   payout: number,
   playerId: number,
-  answerId: number,
+  answerId: number
 }
 
 export interface Result {
   isWinningGuess: boolean,
+  betAmount: number,
+  payout: number,
   credit: number,
   playerId: number,
   player?: Player,
+  answerId: number,
   answer?: Answer
 }
