@@ -22,7 +22,6 @@ export class StatusBenchComponent implements OnInit {
     chips.push(-1);
     let used: number = 2;
     let score: number = this.gameApiService.players.find(p => p.id == playerId).score;
-    score = 96;
 
     while (score - used >= 20) {
       chips.push(25);
