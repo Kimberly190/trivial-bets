@@ -9,4 +9,4 @@
   <div *ngIf="laneData.lane == 0" id="watermark">ALL ANSWERS TOO HIGH</div>
   <app-bet *ngFor="let bet of bets" class="bet" [bet]="bet"></app-bet>
 </div>
-<button class="bet-button" (click)="placeBet()">Bet</button>
+<button [hidden]="!laneData.allAnswersIn || betsByUser == 2" class="bet-button" (click)="placeBet()">Bet</button>

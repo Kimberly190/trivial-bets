@@ -15,6 +15,7 @@ export class LaneComponent implements OnInit {
   @Input() laneData: any;
   @Input() bets: any;
   @Input() answers: any;
+  @Input() betsByUser: number;
 
   @Output() bet = new EventEmitter<models.Bet>();
 

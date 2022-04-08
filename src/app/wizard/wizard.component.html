@@ -1,11 +1,11 @@
 <!-- TODO: check issues with [hidden] at https://stackoverflow.com/questions/35578083/what-is-the-equivalent-of-ngshow-and-nghide-in-angular-2 -->
-<app-game-board id="game-board-outer" [hidden]="!showGameBoard" [laneData]="laneData" (bet)="onBet($event)"></app-game-board>
+<app-game-board id="game-board-outer" [hidden]="!showGameBoard" [laneData]="laneData" [betsByUser]=betsByUser (bet)="onBet($event)"></app-game-board>
 <div id="wizard">
   <div id="p1-welcome" [hidden]="!(page == PAGE_NUM_WELCOME)">
     <p>Ages 8+ | 3 to 7 players</p>
     <h2>Welcome!</h2>
-    <button (click)="hostNewGame()">Host a New Game</button>
     <button (click)="joinGame()">Join a Game</button>
+    <button (click)="hostNewGame()">Host a New Game</button>
   </div>
   <div id="p2-new-game" [hidden]="!(page == PAGE_NUM_NEW_GAME)">
     <h2>New Game</h2>
@@ -31,7 +31,7 @@
     <ng-template #elseBlock>
       <label>Please wait for the host to start the game.</label>
       <app-spinner class="wait"></app-spinner>
-      <button [hidden]="!canRetry" (click)="nextQuestion(false)">Check again...</button>
+      <button [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
     </ng-template>
   </div>
   <div id="p4-answer-question" [hidden]="!(page == PAGE_NUM_ANSWER_Q)">
@@ -43,6 +43,7 @@
     <app-css-hourglass></app-css-hourglass>
   </div>
   <div id="p5-show-answers" [hidden]="!(page == PAGE_NUM_SHOW_A)">
+    <p>Place two bets.  They can be on the same or different lanes.</p>
     <button (click)="refreshAnswers()">Refresh</button>
     <app-spinner></app-spinner>
   </div>
@@ -51,17 +52,19 @@
     <h3>Betting on: {{(betAnswerValue > 0 ? betAnswerValue : 'ALL TOO HIGH')}}</h3>
     <label>How many to bet?</label>
     <input type="number" required [(ngModel)]="bet.amount" placeholder="amount">
-    <!-- TODO fix, plus add validation on max bet -->
+    <!-- TODO fix -->
     <!-- <p>You can bet up to {{(betsPlaced == 0 ? player.score - 1 : player.score)}} chips!</p> -->
     <button (click)="submitBet()">Submit</button>
-    <div class="bet">
+    <!-- <div class="bet">
       <div class="chip placeholder"></div>
       <div class="chip red-chip"></div>
       <div class="chip blue-chip"></div>
-    </div>
-    <app-css-hourglass></app-css-hourglass>
+    </div> -->
+    <!-- <app-css-hourglass></app-css-hourglass> -->
+    <img src="../../assets//poker-chip-flat.gif" />
   </div>
   <div id="p7-show-bets" [hidden]="!(page == PAGE_NUM_SHOW_BETS)">
+    <p>Place two bets.  They can be on the same or different lanes.</p>
     <button (click)="refreshBets()">Refresh</button>
     <app-spinner></app-spinner>
     <fieldset [hidden]="betsPlaced < 2">
@@ -77,7 +80,8 @@
       <button (click)="updateQuestionGetResults()">Submit</button>
     </fieldset>
     <fieldset [hidden]="player.isHost">
-      <label>Please wait for the host.<br></label>
+      <label>Please wait for the host to submit the correct answer.<br></label>
+      <p>Closest guess without going over gets a +3 bonus!</p>
       <app-spinner></app-spinner>
       <label><strong>Ready?</strong></label>
       <button (click)="updateQuestionGetResults()">See Results &gt;</button>
@@ -104,18 +108,25 @@
   </div>
   <div id="p10-score-update" [hidden]="!(page == PAGE_NUM_SCORES)">
     <h2>Scores: Question {{questionNumber}}</h2>
-    <div class="score-grid">
+    <label>The answer was: <strong>{{question.correctAnswer}}!</strong></label>
+    <div class="score-grid score-grid-flex">
       <div *ngFor="let result of otherResults" class="player-card player-{{result.player.playerNumber}}">
         <h3>{{result.player.name}}</h3>
+        <p>Bet {{result.betAmount}} on answer {{result.answer.guess != -1 ? result.answer.guess : "TOO HIGH"}} @ {{result.payout}}x:</p>
         {{(result.credit<0?"":"+")+result.credit}}
       </div>
     </div>
-    <fieldset [hidden]="player.isHost">
+    <p>You always get your white player chips back.</p>
+    <!-- <fieldset [hidden]="player.isHost">
       <label>Please wait for the host.<br></label>
       <app-spinner></app-spinner>
       <label><strong>Ready?</strong></label>
-    </fieldset>
+    </fieldset> -->
+    <!-- <app-spinner></app-spinner> -->
     <button (click)="endQuestion()">Continue &gt;</button>
+    <!-- TODO test: -->
+    <app-spinner></app-spinner>
+    <button [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
   </div>
   <div id="p11--final scores" [hidden]="!(page == PAGE_NUM_FINAL)">
     <h2>Final Scores!</h2>

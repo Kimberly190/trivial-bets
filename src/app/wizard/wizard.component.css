@@ -42,7 +42,23 @@ button:hover {
   grid-template-columns: 1fr 1fr;
 }
 
+.score-grid-flex {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
 .score-grid .player-card {
   width: 80%;
   padding: 10px;
+}
+
+/* HACK need to fix - commented out for now */
+#p6-bet > .bet > .red-chip {
+  left: calc(100% / 2 - 10vw / 2);
+}
+#p6-bet > .bet > .blue-chip {
+  left: calc(100% / 2 - 10vw / 2 + 5px);
+}
+
+#p10-score-update {
+  width: 80%;
 }

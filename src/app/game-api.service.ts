@@ -36,12 +36,12 @@ export class GameApiService {
   }
 
   getPlayers(gameRoomId: number) : Observable<models.Player[]> {
-    this.players.length = 0;
-
     //TODO is there a better way to manage this data sharing?
+    //https://levelup.gitconnected.com/5-ways-to-share-data-between-angular-components-d656a7eb7f96
     var source = this.http.get<models.Player[]>(this.apiEndpoint + '/Player/ForGameRoom/' + gameRoomId);
     source.subscribe(
       (data: models.Player[]) => {
+        this.players.length = 0;
         data.forEach(p => this.players.push(p));
       },
       error => {
@@ -145,10 +145,11 @@ export class GameApiService {
 
       //TODO model type
       let laneData = {
-       lane: i,
+        lane: i,
         answers: [],
         bets: [],
         payout: this.PAYOUTS[i],
+        allAnswersIn: (answers.length === players.length)
       };
       if (i >= startLane && i < startLane + sorted.length) {
         laneData.answers.push(...sorted[i - startLane]);

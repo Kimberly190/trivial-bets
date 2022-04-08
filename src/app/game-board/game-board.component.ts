@@ -17,6 +17,7 @@ export class GameBoardComponent implements OnInit {
 
   //TODO: implement model
   @Input() laneData;
+  @Input() betsByUser: number;
   @Output() bet = new EventEmitter<models.Bet>();
 
   constructor(
@@ -24,12 +25,13 @@ export class GameBoardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+
   }
 
   onBet(bet: models.Bet) {
     // Forward event to wizard
     this.bet.emit(bet);
+    this.betsByUser++;
   }
   
 }

@@ -59,8 +59,11 @@ export class WizardComponent implements OnInit {
   showGameBoard: boolean = false;
   laneData: any[] = []; //TODO remove init if not needed
   betsPlaced: number = 0;
+  betAmountTotal: number = 0;
   page: number;
   canRetry: boolean = false;
+  //TODO replace this + allAnswersIn with single property / or binding?
+  betsByUser: number;
 
   constructor(
     private gameApiService: GameApiService
@@ -133,23 +136,18 @@ export class WizardComponent implements OnInit {
     this.gameApiService.getPlayers(this.gameRoom.id);
   }
 
-  nextQuestion(incrementQuestion: boolean = true) {
-    this.loading = true;
+  nextQuestion(isRetry: boolean = false) {
+    console.log('nextQuestion() called, questionNumber: ' + this.questionNumber);
 
-    if (this.questionNumber == 0) {
-      // Make sure all players are known to this instance at start of game.
-      this.refreshPlayers();
+    this.loading = true;
+    if (!isRetry) {
+      this.questionNumber++; //TODO remove when data-bound?
     }
 
     //TODO: PUT flag on gameRoom to block late joiners?
 
     if (this.player.isHost) {
       // Host creates the question...
-      //TODO persist question number?
-      if (incrementQuestion) {
-        this.questionNumber++; //TODO remove when data-bound?
-      }
-
       this.gameApiService.createQuestion(this.gameRoom.id, this.questionNumber).subscribe(
         (data: models.Question) => {
           this.question = data;
@@ -166,7 +164,12 @@ export class WizardComponent implements OnInit {
             }
           ).subscribe(
             data => {
-              //TODO
+              if (this.questionNumber === 1) {
+                // Make sure all players are known to this instance at start of game.
+                this.refreshPlayers();
+              }
+
+              //TODO - anything else?
             },
             error => {
               //TODO handle
@@ -187,10 +190,6 @@ export class WizardComponent implements OnInit {
       //https://medium.com/angular-in-depth/retry-failed-http-requests-in-angular-f5959d486294
 
       this.canRetry = false;
-      // TODO move out to shared w/ host?
-      if (incrementQuestion) {
-        this.questionNumber++; //TODO remove when data-bound?
-      }
 
       //https://stackoverflow.com/questions/63058012/angular-rxjs-poll-http-request-until-timeout-or-positive-response-from-server
       //TODO remove initial delay?
@@ -209,6 +208,11 @@ export class WizardComponent implements OnInit {
         // Time out after 30 seconds
         timeout(30000),
       ).subscribe((data: models.Question) => {
+        if (this.questionNumber === 1) {
+          // Make sure all players are known to this instance at start of game.
+          this.refreshPlayers();
+        }
+        
         this.question = data;
         //console.log("subcribed to question data: " + this.question);
 
@@ -237,6 +241,8 @@ export class WizardComponent implements OnInit {
         //TODO get all answers & poll
 
         this.betsPlaced = 0;
+        this.betAmountTotal = 0;
+        this.betsByUser = 0;
         this.showGameBoard = true;
         this.page++;
 
@@ -244,7 +250,8 @@ export class WizardComponent implements OnInit {
         this.refreshAnswers();
       },
       error => {
-        //TODO
+        //TODO handle
+        console.log('error creating answer in wizard: ', error);
       }
     ).add(() => { this.loading = false; });
   }
@@ -267,29 +274,47 @@ export class WizardComponent implements OnInit {
   }
 
   onBet(bet: models.Bet) {
-    if (this.betsPlaced < 2) {
-      //TODO: review / test - why isn't this working?
-      if (bet.amount <= this.player.score) {
-        this.bet = bet;
-        this.bet.playerId = this.player.id;
-        //TODO decrement player score by amount?  (would require persisting & updating all users...)
-
-        if (this.bet.answerId == 0) {
-          this.bet.answerId = this.defaultAnswer.id;
-        }
-
-        this.page = this.PAGE_NUM_BET;
-        this.showGameBoard = false;
-      } else {
-        window.alert('You can\'t bet more chips than you have');
-      }
-    } else {
+    if (this.betsPlaced >= 2) {
       window.alert('You can only bet two times.');
+      return;
     }
+
+    this.bet = bet;
+    this.bet.playerId = this.player.id;
+
+    //TODO decrement player score display by amount?  (would require persisting & updating all users...)
+
+    if (this.bet.answerId == 0) {
+      this.bet.answerId = this.defaultAnswer.id;
+    }
+
+    this.page = this.PAGE_NUM_BET;
+    this.showGameBoard = false;
   }
 
   submitBet() {
+    // Update player reference for bet amount validation vs score
+    this.player = this.gameApiService.players.find(p => p.id == this.player.id);
+
+    if (this.bet.amount < 1) {
+      window.alert('The minimum bet is 1.');
+      return;
+    }
+
+    if ((this.betAmountTotal + this.bet.amount) > this.player.score) {
+      window.alert('You can\'t bet more chips than you have.');
+      return;
+    }
+
+    if (this.bet.amount == this.player.score) {
+      window.alert('You can\'t use all your chips in a single bet.');
+      return;
+    }
+
     this.loading = true;
+
+    this.betAmountTotal += this.bet.amount;
+    this.betsByUser++;
 
     this.gameApiService.createBet(this.bet).subscribe(
       (data: models.Bet) => {
@@ -373,7 +398,9 @@ export class WizardComponent implements OnInit {
         this.allResults.forEach(r => {
           // Populate player and answer to simplify display logic.
           r.player = this.gameApiService.players.find(p => p.id == r.playerId);
-          r.answer = this.allAnswers.find(a => a.playerId == r.playerId);
+          //TODO test bugfix
+          //r.answer = this.allAnswers.find(a => a.playerId == r.playerId);
+          r.answer = this.allAnswers.find(a => a.id == r.answerId);
           //TODO remove after bugfix for 'answer is undefined for some instances but not others'
           console.log('REMOVE on result, set player: ', r.player, ' and answer: ', r.answer);
         });
