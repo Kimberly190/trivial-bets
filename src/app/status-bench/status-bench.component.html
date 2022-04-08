@@ -1,4 +1,11 @@
 <div *ngFor="let player of players" class="player-status player-{{player.playerNumber}}">
   <h3>{{player.name}}</h3>
-  {{player.score}}
+  <p>{{player.score}}</p>
+  <div class="chip-grid" [hidden]="!showChips">
+    <div *ngFor="let amount of chips(player.id)" class="{{chipClass(amount, player.playerNumber)}}">
+      <p *ngIf="amount === -1 || amount === 1">1</p>
+      <p *ngIf="amount >= 5">{{amount}}</p>
+    </div>
+  </div>
+  <button class="chip red-chip" (click)="toggleChips()">?</button>
 </div>
