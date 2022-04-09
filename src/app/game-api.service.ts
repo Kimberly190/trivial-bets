@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -6,9 +7,6 @@ import * as models from './models';
 
 @Injectable()
 export class GameApiService {
-
-  private apiEndpoint = 'https://trivial-bets.azurewebsites.net/api/v1';
-  //private apiEndpoint = 'https://localhost:5001/api/v2'
 
   NUM_LANES = 8;
   PAYOUTS = [6, 5, 4, 3, 2, 3, 4, 5];
@@ -24,21 +22,21 @@ export class GameApiService {
   ) { }
 
   testLiveApi() {
-    return this.http.get(this.apiEndpoint + '/Result/ForQuestion/3');
+    return this.http.get(environment.gameApiUrl + '/Result/ForQuestion/3');
   }
 
   createGame(): Observable<models.GameRoom> {
-    return this.http.post<models.GameRoom>(this.apiEndpoint + '/GameRoom', { });
+    return this.http.post<models.GameRoom>(environment.gameApiUrl + '/GameRoom', { });
   }
 
   createPlayer(player: models.Player): Observable<models.Player> {
-    return this.http.post<models.Player>(this.apiEndpoint + '/Player', player);
+    return this.http.post<models.Player>(environment.gameApiUrl + '/Player', player);
   }
 
   getPlayers(gameRoomId: number) : Observable<models.Player[]> {
     //TODO is there a better way to manage this data sharing?
     //https://levelup.gitconnected.com/5-ways-to-share-data-between-angular-components-d656a7eb7f96
-    var source = this.http.get<models.Player[]>(this.apiEndpoint + '/Player/ForGameRoom/' + gameRoomId);
+    var source = this.http.get<models.Player[]>(environment.gameApiUrl + '/Player/ForGameRoom/' + gameRoomId);
     source.subscribe(
       (data: models.Player[]) => {
         this.players.length = 0;
@@ -53,45 +51,45 @@ export class GameApiService {
   }
 
   createQuestion(gameRoomId: number, rank: number) : Observable<models.Question> {
-    return this.http.post<models.Question>(this.apiEndpoint + '/Question', { gameRoomId: gameRoomId, rank: rank });
+    return this.http.post<models.Question>(environment.gameApiUrl + '/Question', { gameRoomId: gameRoomId, rank: rank });
   }
 
   getLatestQuestion(gameRoomId: number) : Observable<models.Question[]> {
-    //TODO fix once API updated; currently returns all quetions and caller sorts
-    return this.http.get<models.Question[]>(this.apiEndpoint + '/Question');
+    //TODO fix once API updated; currently returns all questions in all games, and caller sorts
+    return this.http.get<models.Question[]>(environment.gameApiUrl + '/Question');
   }
 
   getQuestion(gameRoomId: number, rank: number) : Observable<models.Question> {
     //console.log('get question ' + rank + ' for room ' + gameRoomId);
-    return this.http.get<models.Question>(this.apiEndpoint + `/GameRoom/${gameRoomId}/Question/${rank}`)
+    return this.http.get<models.Question>(environment.gameApiUrl + `/GameRoom/${gameRoomId}/Question/${rank}`)
   }
 
   createAnswer(answer: models.Answer) : Observable<models.Answer> {
-    return this.http.post<models.Answer>(this.apiEndpoint + '/Answer', answer);
+    return this.http.post<models.Answer>(environment.gameApiUrl + '/Answer', answer);
   }
 
   getAnswersForQuestion(questionId: number) : Observable<models.Answer[]> {
-    return this.http.get<models.Answer[]>(this.apiEndpoint + '/Answer/ForQuestion/' + questionId);
+    return this.http.get<models.Answer[]>(environment.gameApiUrl + '/Answer/ForQuestion/' + questionId);
   }
 
   createBet(bet: models.Bet) : Observable<models.Bet> {
-    return this.http.post<models.Bet>(this.apiEndpoint + '/Bet', bet);
+    return this.http.post<models.Bet>(environment.gameApiUrl + '/Bet', bet);
   }
 
   getBetsForQuestion(questionId: number) : Observable<models.Bet[]> {
-    return this.http.get<models.Bet[]>(this.apiEndpoint + '/Bet/ForQuestion/' + questionId);
+    return this.http.get<models.Bet[]>(environment.gameApiUrl + '/Bet/ForQuestion/' + questionId);
   }
 
   updateQuestion(question: models.Question) {
-    return this.http.put<models.Question>(this.apiEndpoint + '/Question/' + question.id, question);
+    return this.http.put<models.Question>(environment.gameApiUrl + '/Question/' + question.id, question);
   }
 
   getResultsForQuestion(questionId: number) : Observable<models.Result[]> {
-    return this.http.get<models.Result[]>(this.apiEndpoint + '/Result/ForQuestion/' + questionId);
+    return this.http.get<models.Result[]>(environment.gameApiUrl + '/Result/ForQuestion/' + questionId);
   }
 
   updatePlayer(player: models.Player) {
-    return this.http.put<models.Player>(this.apiEndpoint + '/Player/' + player.id, player);
+    return this.http.put<models.Player>(environment.gameApiUrl + '/Player/' + player.id, player);
   }
 
   //TODO typed return
@@ -149,6 +147,7 @@ export class GameApiService {
         answers: [],
         bets: [],
         payout: this.PAYOUTS[i],
+        //TODO globalize this? / get from answer polling?
         allAnswersIn: (answers.length === players.length)
       };
       if (i >= startLane && i < startLane + sorted.length) {
