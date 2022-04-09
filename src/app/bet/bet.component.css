@@ -1,17 +1,17 @@
 .red-chip {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 1vw;
+    top: 1vw;
 }
 
 .blue-chip {
     position: absolute;
-    left: 5px;
-    top: 5px;
+    left: 2vw;
+    top: 2vw;
 }
 
 .player-chip {
     position: absolute;
-    left: 10px;
-    top: 10px;
+    left: 0;
+    top: 0;
 }

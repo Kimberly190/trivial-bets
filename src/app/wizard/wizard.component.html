@@ -20,19 +20,19 @@
     <button (click)="addPlayer()">Go!</button>
     <button (click)="back()">&lt; Back</button>
   </div>
-  <div id="p3-waiting" [hidden]="!(page == PAGE_NUM_WAITING)">
+  <div id="p3-waiting" class="flex-column" [hidden]="!(page == PAGE_NUM_WAITING)">
     <h2>Ready?</h2>
     <label>Share this room code with all players: <strong>{{gameRoom ? gameRoom.id : ''}}</strong><br></label>
-    <button (click)="refreshPlayers()">Refresh</button>
     <ng-container *ngIf="player.isHost; else elseBlock">
       <label>Click the button to start the game!</label>
       <button (click)="nextQuestion()">Everyone's here!</button>
     </ng-container>
     <ng-template #elseBlock>
       <label>Please wait for the host to start the game.</label>
-      <app-spinner class="wait"></app-spinner>
+      <app-spinner [hidden]="canRetry" class="wait"></app-spinner>
       <button [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
     </ng-template>
+    <button class="button-refresh flex-column-end" (click)="refreshPlayers()">Refresh &#x21bb;</button>
   </div>
   <div id="p4-answer-question" [hidden]="!(page == PAGE_NUM_ANSWER_Q)">
     <h2>Question {{questionNumber}}</h2>
@@ -43,8 +43,7 @@
     <app-css-hourglass></app-css-hourglass>
   </div>
   <div id="p5-show-answers" [hidden]="!(page == PAGE_NUM_SHOW_A)">
-    <p>Place two bets.  They can be on the same or different lanes.</p>
-    <button (click)="refreshAnswers()">Refresh</button>
+    <button class="button-refresh" (click)="refreshAnswers()">Refresh &#x21bb;</button>
     <app-spinner></app-spinner>
   </div>
   <div id="p6-bet" [hidden]="!(page == PAGE_NUM_BET)">
@@ -52,9 +51,8 @@
     <h3>Betting on: {{(betAnswerValue > 0 ? betAnswerValue : 'ALL TOO HIGH')}}</h3>
     <label>How many to bet?</label>
     <input type="number" required [(ngModel)]="bet.amount" placeholder="amount">
-    <!-- TODO fix -->
-    <!-- <p>You can bet up to {{(betsPlaced == 0 ? player.score - 1 : player.score)}} chips!</p> -->
     <button (click)="submitBet()">Submit</button>
+    <!-- TODO resolve image / spinner for this page -->
     <!-- <div class="bet">
       <div class="chip placeholder"></div>
       <div class="chip red-chip"></div>
@@ -65,8 +63,8 @@
     <img src = 'http://i.imgur.com/5eaUapF.gif'/>
   </div>
   <div id="p7-show-bets" [hidden]="!(page == PAGE_NUM_SHOW_BETS)">
-    <p>Place two bets.  They can be on the same or different lanes.</p>
-    <button (click)="refreshBets()">Refresh</button>
+    <button class="button-refresh" (click)="refreshBets()">Refresh &#x21bb;</button>
+    <p class="hint">Place two bets.  They can be on the same or different lanes.</p>
     <app-spinner></app-spinner>
     <fieldset [hidden]="betsPlaced < 2">
       <label>All bets in?</label>
@@ -97,10 +95,9 @@
         <h3>{{winningGuess.player.name}}</h3>
         {{winningGuess.answer.guess}}
       </div>
-      <div class="bet">
-        <div class="chip placeholder"></div>
+      <div class="chip placeholder">
         <div class="chip red-chip">+3</div>
-      </div>
+    </div>
     </div>
     <div *ngIf="!winningGuesses?.length">
       <label>All guesses were too high!</label>
@@ -117,7 +114,8 @@
         {{(result.credit<0?"":"+")+result.credit}}
       </div>
     </div>
-    <p>You always get your white player chips back.</p>
+    <p class="hint">You always get your white player chips back.</p>
+    <!-- TODO resolve worklflow after scores -->
     <!-- <fieldset [hidden]="player.isHost">
       <label>Please wait for the host.<br></label>
       <app-spinner></app-spinner>

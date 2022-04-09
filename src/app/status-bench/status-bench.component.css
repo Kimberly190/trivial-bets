@@ -1,5 +1,9 @@
 .player-status {
     position: relative;
+    margin: .2rem;
+    flex: 1 1;
+
+    border-radius: 5px;
 }
 
 .chip-grid {
@@ -16,7 +20,7 @@
 .placeholder {
     position: relative;
     margin: .5vh .5vw;
-    box-shadow: 0.5vh 0.5vh 3vh #888888;
+    box-shadow: 0.5vh 0.5vh 3vh var(--theme-color-shade, #888888);
 }
 
 .chip {

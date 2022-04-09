@@ -4,7 +4,8 @@ html {
     --theme-color-mid: #4faa5b;
     --theme-color-dark: #315a36;
     --theme-color-accent: white;
-    --theme-color-shade: #222222;
+    --theme-color-shade-dark: #222222;
+    --theme-color-shade: #888888;
 }
 
 *, *:before, *:after {
@@ -21,7 +22,7 @@ html {
 
 /* NOTE: keep main bottom margin same as status bench height */
 main {
-    margin-bottom: 80px;
+    margin-bottom: 10vh;
 }
 
 /* TODO: check (https://stackoverflow.com/questions/35578083/what-is-the-equivalent-of-ngshow-and-nghide-in-angular-2) */
@@ -36,15 +37,41 @@ main {
 
 h1 {
     font-family: 'Luckiest Guy', 'Trebuchet MS', Arial, sans-serif;
-    font-size: 2rem;
-    text-shadow: 1px 1px 3px var(--theme-color-shade, #222222);
+    font-size: 2.5rem;
+    text-shadow: 1px 1px 3px var(--theme-color-shade-dark, #222222);
     color: var(--theme-color-mid, #96e0a0);
 }
 
 h2 {
     font-size: 1.5rem;
     font-weight: bold;
-    text-shadow: 1px 1px 2px var(--theme-color-shade, #222222);
+    text-shadow: 1px 1px 2px var(--theme-color-shade-dark, #222222);
+}
+
+h3, .player-card {
+    font-family: 'Segoe Print', Arial, Helvetica, sans-serif;
+    line-height: 1.15;
+}
+
+p.hint {
+    font-size: smaller;
+}
+
+fieldset {
+    border: none;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-column-end {
+    margin-top: auto !important;
+}
+
+button:hover {
+    box-shadow: 3px 3px 10px var(--theme-color-shade, #888888), inset 0 0 10px #bbbbbb !important;
 }
 
 /* TODO refine behavior of hiding spinners */
@@ -55,6 +82,7 @@ h2 {
 .wait .spinner {
     display: block;
 }
+
 
 
 /* TODO organize CSS by component */
@@ -68,15 +96,6 @@ h2 {
     color: var(--theme-color-accent, white);
     
     display: block;
-}
-
-h3, .player-card {
-    font-family: 'Segoe Print', Arial, Helvetica, sans-serif;
-    line-height: 1.15;
-}
-
-fieldset {
-  border: none;
 }
 
 #gameboard {
@@ -97,7 +116,7 @@ fieldset {
     background-color: var(--theme-color-light, #96e0a0);
     border: 2px solid var(--theme-color-dark, #315a36);
     border-radius: 5px;
-    box-shadow: 2px 2px 5px 0 #888888;
+    box-shadow: 2px 2px 5px 0 var(--theme-color-shade, #888888);
 
     display: grid;
     grid-template-rows: max-content 10vh auto max-content;
@@ -137,7 +156,7 @@ fieldset {
 
     font-size: 0.75rem;
     border-radius: 5px;
-    box-shadow: 3px 3px 5px #888888;
+    box-shadow: 3px 3px 5px var(--theme-color-shade, #888888);
 }
 
 .bet {
@@ -154,12 +173,12 @@ fieldset {
 
     border-radius: 50%;
     font-weight: bold;
-    color: var(--theme-color-accent, white);
+    color: white;
 }
 
 .chip {
     border: 2px dashed white;
-    box-shadow: 3px 3px 5px #888888;
+    box-shadow: 3px 3px 5px var(--theme-color-shade, #888888);
     display: grid;
     align-content: center;
 }
@@ -184,22 +203,22 @@ fieldset {
 
 .bet-button {
     background-color: green;
-    border: 1px solid #333333;
-    box-shadow: 3px 3px 5px #888888, inset 0 0 10px #333333;
+    border: 1px solid var(--theme-color-shade-dark, #222222);
+    box-shadow: 3px 3px 5px var(--theme-color-shade, #888888), inset 0 0 10px var(--theme-color-shade-dark, #222222);
     text-transform: uppercase;
 
     padding: 5px;
 }
 
 .bet-button:hover {
-    border: 1px solid white;
-    box-shadow: 3px 3px 5px #888888, inset 0 0 20px white;
+    border: 1px solid var(--theme-color-accent, white);
+    box-shadow: 3px 3px 5px var(--theme-color-shade, #888888), inset 0 0 20px var(--theme-color-accent, white);
 }
 
 #status-bench {
     position: fixed;
     width: 100%;
-    height: 80px;
+    height: 10vh;
     left: 0;
     bottom: 0;
     padding: .2rem;
@@ -207,13 +226,6 @@ fieldset {
     background-color: lightgray;
 
     display: flex;
-}
-
-.player-status {
-    margin: .2rem;
-    flex: 1 1;
-
-    border-radius: 5px;
 }
 
 @media (max-width: 550px) {
@@ -246,12 +258,6 @@ fieldset {
     }
     .bet {
         margin: .2rem .5rem;
-    }
-    #status-bench {
-      height: 60px;
-    }
-    main {
-      margin-bottom: 60px;
     }
 }
 
