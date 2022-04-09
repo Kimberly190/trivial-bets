@@ -56,6 +56,9 @@ h2 {
     display: block;
 }
 
+
+/* TODO organize CSS by component */
+
 #gameboard h2 {
     padding: .2rem;
 
@@ -168,25 +171,14 @@ fieldset {
 }
 
 .red-chip {
-    position: absolute;
-    left: 0;
-    top: 0;
-
     background-color: red;
 }
 
 .blue-chip {
-    position: absolute;
-    left: 5px;
-    top: 5px;
-
     background-color: blue;
 }
 
 .player-chip {
-    position: absolute;
-    left: 10px;
-    top: 10px;
     color: black;
 }
 
@@ -234,6 +226,7 @@ fieldset {
     .lane {
         grid-template-columns: max-content 15vw auto max-content;
         grid-template-rows: none;
+        align-items: center;
     }
     #undercut-lane {
         grid-column: 2 / 4;
@@ -298,6 +291,7 @@ fieldset {
     border: 2px solid magenta;
 }
 
+/* TODO what is this for */
 .player-0 {
     background: white;
     border: 2px dashed black;
