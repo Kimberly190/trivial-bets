@@ -193,8 +193,7 @@ export class WizardComponent implements OnInit {
 
       //https://stackoverflow.com/questions/63058012/angular-rxjs-poll-http-request-until-timeout-or-positive-response-from-server
       //TODO remove initial delay?
-      interval(5000).pipe(
-
+      interval(3000).pipe(
         switchMap(() => this.gameApiService.getQuestion(this.gameRoom.id, this.questionNumber)),
 
         filter((data: models.Question) => {
@@ -205,8 +204,8 @@ export class WizardComponent implements OnInit {
         // Emit only the first value emitted by the source
         take(1),
 
-        // Time out after 30 seconds
-        timeout(30000),
+        // Time out after 15 seconds
+        timeout(15000),
       ).subscribe((data: models.Question) => {
         if (this.questionNumber === 1) {
           // Make sure all players are known to this instance at start of game.
@@ -214,8 +213,6 @@ export class WizardComponent implements OnInit {
         }
         
         this.question = data;
-        //console.log("subcribed to question data: " + this.question);
-
         this.answer.questionId = this.question.id;
         this.answer.playerId = this.player.id;
 
@@ -227,7 +224,7 @@ export class WizardComponent implements OnInit {
           console.log('error getting question in wizard: ', error);
           this.canRetry = true;
         }
-      ).add(() => { console.log("loading complete"); this.loading = false; });
+      ).add(() => { console.log("polling complete"); this.loading = false; });
     }
   }
 
@@ -351,9 +348,15 @@ export class WizardComponent implements OnInit {
   goToResults() {
     this.page++;
     this.showGameBoard = false;
+
+    if (!this.player.isHost) {
+      this.updateQuestionGetResults();
+    }
   }
 
   updateQuestionGetResults() {
+    console.log('updateQuestionGetResults() called, questionNumber: ' + this.questionNumber);
+
     if (this.player.isHost) {
       // Host updates the question with the correct answer...
       this.loading = true;
@@ -370,21 +373,32 @@ export class WizardComponent implements OnInit {
     } else {
       // ..other players just get it.
       this.loading = true;
+      this.canRetry = false;
 
-      this.gameApiService.getLatestQuestion(this.gameRoom.id).subscribe(
-        (data: models.Question[]) => {
-          //TODO update after API change: will return just the one question
-          let thisGameQuestions = data.filter(q => q.gameRoomId == this.gameRoom.id);
-          thisGameQuestions.sort((q1, q2) => q2.id - q1.id);
-          this.question = thisGameQuestions[0];
+      interval(3000).pipe(
+        switchMap(() => this.gameApiService.getQuestion(this.gameRoom.id, this.questionNumber)),
 
+        filter((data: models.Question) => {
+          console.log('got question, continue if answer is set: ' + JSON.stringify(data));
+          return data && data.correctAnswer >= 0;
+        }),
+
+        // Emit only the first value emitted by the source
+        take(1),
+
+        // Time out after 15 seconds
+        timeout(15000),
+
+      ).subscribe((data: models.Question) => {
+          this.question = data;
           this.getResults();
-        },
+      },
         error => {
           //TODO handle
-          console.log('error getting updated question in wizard: ', error);
+          console.log('error getting question results in wizard: ', error);
+          this.canRetry = true;
         }
-      ).add(() => { this.loading = false; });
+      ).add(() => { console.log("polling complete"); this.loading = false; });
     }
   }
 
@@ -398,11 +412,7 @@ export class WizardComponent implements OnInit {
         this.allResults.forEach(r => {
           // Populate player and answer to simplify display logic.
           r.player = this.gameApiService.players.find(p => p.id == r.playerId);
-          //TODO test bugfix
-          //r.answer = this.allAnswers.find(a => a.playerId == r.playerId);
           r.answer = this.allAnswers.find(a => a.id == r.answerId);
-          //TODO remove after bugfix for 'answer is undefined for some instances but not others'
-          console.log('REMOVE on result, set player: ', r.player, ' and answer: ', r.answer);
         });
 
         this.winningGuesses = this.allResults.filter(r => r.isWinningGuess && r.playerId);

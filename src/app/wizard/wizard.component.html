@@ -73,6 +73,8 @@
   </div>
   <div id="p8-showtime" [hidden]="!(page == PAGE_NUM_SHOWTIME)">
     <h2>Showtime!</h2>
+    <p>Closest guess without going over gets a +3 bonus!</p>
+    <!-- TODO use this approach to hidden for all host/other splits?-->
     <fieldset [hidden]="!player.isHost">
       <label>Enter the correct answer:</label>
       <input type="number" required [(ngModel)]="question.correctAnswer" placeholder="correct answer">
@@ -80,12 +82,9 @@
     </fieldset>
     <fieldset [hidden]="player.isHost">
       <label>Please wait for the host to submit the correct answer.<br></label>
-      <p>Closest guess without going over gets a +3 bonus!</p>
-      <app-spinner></app-spinner>
-      <label><strong>Ready?</strong></label>
-      <button (click)="updateQuestionGetResults()">See Results &gt;</button>
+      <app-spinner [hidden]="canRetry" class="wait"></app-spinner>
+      <button [hidden]="!canRetry" (click)="updateQuestionGetResults()">Check again...</button>
     </fieldset>
-    <app-css-hourglass></app-css-hourglass>
   </div>
   <div id="p9-winning-guesses" [hidden]="!(page == PAGE_NUM_WINNING_G)">
     <h2>Question {{questionNumber}} Results</h2>

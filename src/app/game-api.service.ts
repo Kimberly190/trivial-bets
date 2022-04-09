@@ -54,11 +54,6 @@ export class GameApiService {
     return this.http.post<models.Question>(environment.gameApiUrl + '/Question', { gameRoomId: gameRoomId, rank: rank });
   }
 
-  getLatestQuestion(gameRoomId: number) : Observable<models.Question[]> {
-    //TODO fix once API updated; currently returns all questions in all games, and caller sorts
-    return this.http.get<models.Question[]>(environment.gameApiUrl + '/Question');
-  }
-
   getQuestion(gameRoomId: number, rank: number) : Observable<models.Question> {
     //console.log('get question ' + rank + ' for room ' + gameRoomId);
     return this.http.get<models.Question>(environment.gameApiUrl + `/GameRoom/${gameRoomId}/Question/${rank}`)
