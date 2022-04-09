@@ -42,3 +42,9 @@ export interface Result {
   answerId: number,
   answer?: Answer
 }
+
+// View models
+export interface ChipGroup {
+  amount: number,
+  count: number
+}

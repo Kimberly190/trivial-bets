@@ -1,11 +1,17 @@
-<div *ngFor="let player of players" class="player-status player-{{player.playerNumber}}">
+<button *ngFor="let player of players" class="player-status player-{{player.playerNumber}}" (click)="toggleChips()">
   <h3>{{player.name}}</h3>
   <p>{{player.score}}</p>
   <div class="chip-grid" [hidden]="!showChips">
-    <div *ngFor="let amount of chips(player.id)" class="{{chipClass(amount, player.playerNumber)}}">
-      <p *ngIf="amount === -1 || amount === 1">1</p>
-      <p *ngIf="amount >= 5">{{amount}}</p>
+    <div *ngFor="let group of getChipGroups(player.id)" class="chip placeholder">
+      <!-- player chips always display 2 -->
+      <div *ngIf="group.amount === -1" class="chip player-chip player-{{player.playerNumber}} offset-1"></div>
+      <div *ngIf="group.amount === -1" class="chip player-chip player-{{player.playerNumber}}">2x1</div>
+      <!-- else if blue/5 -->
+      <div *ngIf="group.amount === 5 && group.count > 1" class="chip blue-chip offset-1"></div>
+      <div *ngIf="group.amount === 5 && group.count > 0" class="chip blue-chip">{{group.count}}x5</div>
+      <!-- else if red/1 -->
+      <div *ngIf="group.amount === 1 && group.count > 1" class="chip red-chip offset-1"></div>
+      <div *ngIf="group.amount === 1 && group.count > 0" class="chip red-chip">{{group.count}}x1</div>
     </div>
   </div>
-  <button class="chip red-chip" (click)="toggleChips()">?</button>
-</div>
+</button>

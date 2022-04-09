@@ -4,29 +4,27 @@
 
 .chip-grid {
     position: absolute;
-    top: -20vh;
+    top: -350%;
+    height: 300%;
     width: 100%;
-    height: 18vh;
-    display: grid;
-    grid-gap: 0.3rem;
-    grid-template-columns: repeat(auto-fill, minmax(7vw, 1fr));
-    background-color: rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-.chip-grid .chip {
+.placeholder {
     position: relative;
-    left: 0;
-    top: 0;
-    width: 7vw;
-    height: 7vw;
+    margin: .5vh .5vw;
+    box-shadow: 0.5vh 0.5vh 3vh #888888;
 }
 
-button.chip.red-chip {
+.chip {
+    z-index: 1;
+}
+
+.offset-1 {
     position: absolute;
-    right: 0.3rem;
-    bottom: 0.3rem;
-    left: auto;
-    top: auto;
-    width: 1.5rem;
-    height: 1.5rem;
+    left: 0.5vh;
+    top: 0.5vh;
 }

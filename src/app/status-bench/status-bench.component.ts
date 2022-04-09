@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import { GameApiService } from '../game-api.service';
 
-import { Player } from '../models';
+import { ChipGroup, Player } from '../models';
 
 @Component({
   selector: 'app-status-bench',
@@ -15,32 +15,36 @@ export class StatusBenchComponent implements OnInit {
 
   get players(): Player[] { return this.gameApiService.players; };
 
-  chips(playerId: number): number[] {
-    let chips: number[] = [];
-    // white player chips
-    chips.push(-1);
-    chips.push(-1);
-    let used: number = 2;
+  getChipGroups(playerId: number): ChipGroup[] {
+    let groups: ChipGroup[] = [];
     let score: number = this.gameApiService.players.find(p => p.id == playerId).score;
+    let remaining: number = score;
 
-    while (score - used >= 20) {
-      chips.push(25);
-      used += 25;
+    let playerChipGroup: ChipGroup = {
+      amount: -1,
+      count: 2
+    };
+    groups.push(playerChipGroup);
+    remaining -= 2;
+
+    if (remaining > 9) {
+      let blueChipGroup: ChipGroup = {
+        amount: 5,
+        count: Math.floor(remaining / 5) - 1 // last 5 should always show as red chips, up to 9
+      };
+      groups.push(blueChipGroup);
+      remaining -= blueChipGroup.amount * blueChipGroup.count;
     }
 
-    while (score - used >= 5) {
-      chips.push(5);
-      used += 5;
+    if (remaining > 0) {
+      let redChipGroup: ChipGroup = {
+        amount: 1,
+        count: remaining
+      };
+      groups.push(redChipGroup);
     }
-    while (score - used >= 1) {
-      chips.push(1);
-      used += 1;
-    }
-    return chips;
-  }
 
-  chipClass(amount: number, playerNumber: number): string {
-    return amount === -1 ? "chip player-chip player-" + playerNumber : amount === 1 ? "chip red-chip" : "chip blue-chip";
+    return groups;
   }
 
   toggleChips() {
