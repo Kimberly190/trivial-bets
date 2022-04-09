@@ -14,7 +14,7 @@ export interface Player {
 export interface Question {
   id: number,
   gameRoomId: number,
-  correctAnswer: number
+  correctAnswer?: number
 }
 
 export interface Answer {

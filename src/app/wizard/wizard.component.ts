@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewChild, ElementRef } from '@angular/core';
 import { interval } from 'rxjs';
 import { switchMap, filter, take, timeout } from 'rxjs/operators';
 
@@ -65,6 +65,11 @@ export class WizardComponent implements OnInit {
   //TODO replace this + allAnswersIn with single property / or binding?
   betsByUser: number;
 
+  @ViewChild("nameInput") _nameInput: ElementRef;
+  @ViewChild("guessInput") _guessInput: ElementRef;
+  @ViewChild("betInput") _betInput: ElementRef;
+  @ViewChild("answerInput") _answerInput: ElementRef;
+
   constructor(
     private gameApiService: GameApiService
   ) { }
@@ -89,11 +94,15 @@ export class WizardComponent implements OnInit {
         //TODO handle
         console.log('error creating gameRoom in wizard: ', error);
       }
-    ).add(() => { this.loading = false; });
+    ).add(() => {
+      this.loading = false;
+      this.setFocusOn(this._nameInput);
+    });
   }
 
   joinGame() {
     this.page++;
+    this.setFocusOn(this._nameInput);
   }
 
   //TODO can back be enabled in bet screen, others?
@@ -183,7 +192,10 @@ export class WizardComponent implements OnInit {
           //TODO handle
           console.log('error creating question in wizard: ', error);
         }
-      ).add(() => { this.loading = false; });
+      ).add(() => {
+        this.loading = false;
+        this.setFocusOn(this._guessInput);
+      });
     } else {
       // ..other players just get it.
       //TODO check alt method of polling with retry, delay, back-off
@@ -224,7 +236,11 @@ export class WizardComponent implements OnInit {
           console.log('error getting question in wizard: ', error);
           this.canRetry = true;
         }
-      ).add(() => { console.log("polling complete"); this.loading = false; });
+      ).add(() => {
+        console.log("polling complete");
+        this.loading = false;
+        this.setFocusOn(this._guessInput);
+      });
     }
   }
 
@@ -287,6 +303,7 @@ export class WizardComponent implements OnInit {
 
     this.page = this.PAGE_NUM_BET;
     this.showGameBoard = false;
+    this.setFocusOn(this._betInput);
   }
 
   submitBet() {
@@ -349,7 +366,9 @@ export class WizardComponent implements OnInit {
     this.page++;
     this.showGameBoard = false;
 
-    if (!this.player.isHost) {
+    if (this.player.isHost) {
+      this.setFocusOn(this._answerInput);
+    } else {
       this.updateQuestionGetResults();
     }
   }
@@ -380,7 +399,7 @@ export class WizardComponent implements OnInit {
 
         filter((data: models.Question) => {
           console.log('got question, continue if answer is set: ' + JSON.stringify(data));
-          return data && data.correctAnswer >= 0;
+          return data && data.correctAnswer != null;
         }),
 
         // Emit only the first value emitted by the source
@@ -408,7 +427,7 @@ export class WizardComponent implements OnInit {
     this.gameApiService.getResultsForQuestion(this.question.id).subscribe(
       (data: models.Result[]) => {
 
-        this.allResults = data;
+        this.allResults = data.sort((ra, rb) => { return ra > rb ? -1 : 1 });
         this.allResults.forEach(r => {
           // Populate player and answer to simplify display logic.
           r.player = this.gameApiService.players.find(p => p.id == r.playerId);
@@ -481,4 +500,9 @@ export class WizardComponent implements OnInit {
     //?
   }
 
+  setFocusOn(element: ElementRef) {
+    setTimeout(()=>{
+      element.nativeElement.focus();
+    },100);
+  }
 }
