@@ -38,18 +38,32 @@ button.button-refresh {
   width: auto;
 }
 
-.score-grid {
+.result-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: center;
 }
 
-.score-grid-flex {
-  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
-}
-
-.score-grid .player-card {
+.result-grid .player-card {
   width: 80%;
-  padding: 10px;
+  padding: 0.2rem;
+}
+
+.result-flex {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.result-flex .player-card {
+  flex: 0;
+  align-self: stretch;
+  min-width: 6rem;
+  margin: 0.5rem !important;
+  padding: 0.2rem;
 }
 
 #p3-waiting {

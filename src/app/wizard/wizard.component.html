@@ -89,7 +89,7 @@
   <div id="p9-winning-guesses" [hidden]="!(page == PAGE_NUM_WINNING_G)">
     <h2>Question {{questionNumber}} Results</h2>
     <label>The answer was: <strong>{{question.correctAnswer}}!</strong></label>
-    <div *ngFor="let winningGuess of winningGuesses" class="score-grid">
+    <div *ngFor="let winningGuess of winningGuesses" class="result-grid">
       <div class="player-card player-{{winningGuess.player.playerNumber}}">
         <h3>{{winningGuess.player.name}}</h3>
         {{winningGuess.answer.guess}}
@@ -106,7 +106,7 @@
   <div id="p10-score-update" [hidden]="!(page == PAGE_NUM_SCORES)">
     <h2>Scores: Question {{questionNumber}}</h2>
     <label>The answer was: <strong>{{question.correctAnswer}}!</strong></label>
-    <div class="score-grid score-grid-flex">
+    <div class="result-flex">
       <div *ngFor="let result of otherResults" class="player-card player-{{result.player.playerNumber}}">
         <h3>{{result.player.name}}</h3>
         <p>Bet {{result.betAmount}} on answer {{result.answer.guess != -1 ? result.answer.guess : "TOO HIGH"}} @ {{result.payout}}x:</p>
@@ -128,7 +128,7 @@
   </div>
   <div id="p11--final scores" [hidden]="!(page == PAGE_NUM_FINAL)">
     <h2>Final Scores!</h2>
-    <div class="score-grid">
+    <div class="result-flex">
       <div *ngFor="let player of players" class="player-card player-{{player.playerNumber}}">
         <h3>{{player.name}}</h3>
         {{player.score}}
