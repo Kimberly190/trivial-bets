@@ -1,0 +1,89 @@
+h2 {
+    padding: .2rem;
+
+    font-size: 1rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 3px black;
+    color: var(--theme-color-accent, white);
+    
+    display: block;
+}
+
+.lane-space {
+    position: relative;
+    max-height: 40vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    flex-wrap: wrap;
+}
+
+.player-card {
+    margin: .3rem;
+}
+
+.bet {
+    position: relative;
+    margin: .3rem;
+}
+
+.bet-button {
+    background-color: green;
+    border: 1px solid var(--theme-color-shade-dark, #222222);
+    box-shadow: 3px 3px 5px var(--theme-color-shade, #888888), inset 0 0 10px var(--theme-color-shade-dark, #222222);
+    text-transform: uppercase;
+
+    margin-bottom: 1vh;
+    padding: 5px;
+    z-index: 1;
+}
+
+.bet-button:hover {
+    border: 1px solid var(--theme-color-accent, white);
+    box-shadow: 3px 3px 5px var(--theme-color-shade, #888888), inset 0 0 20px var(--theme-color-accent, white);
+}
+
+#undercut-lane {
+    grid-row: 2 / 4;
+    grid-column: 1 / 2;
+}
+
+#watermark {
+    position: absolute;
+    /* TODO - % isn't perfect for these - change to have text float centrally within an outer absolute div? */
+    left: 43%;
+    top: 6%;
+
+    writing-mode: vertical-rl;
+    font-weight: bold;
+    /* font-size: 1.25rem; */
+    font-size: min(3.5vw, 4vh);
+    opacity: 0.3;
+    white-space: nowrap;
+}
+
+@media (max-width: 550px) {
+    #undercut-lane {
+        grid-column: 2 / 4;
+        grid-row: 1 / 2;
+    }
+    #watermark {
+        left: 0;
+        top: 50%;
+        width: 100%;
+        -ms-transform: translateY(-50%);
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        writing-mode: initial;
+        font-size: 1.25rem;
+    }
+    .lane-space {
+        flex-direction: row;
+    }
+    .bet-button {
+        margin-right: 1vw;
+        margin-bottom: auto;
+    }
+}

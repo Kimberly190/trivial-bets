@@ -1,0 +1,21 @@
+.lane {
+    flex: 1 1;
+    margin: .5vw;
+
+    background-color: var(--theme-color-light, #96e0a0);
+    border: 2px solid var(--theme-color-dark, #315a36);
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px 0 var(--theme-color-shade, #888888);
+
+    display: grid;
+    grid-template-rows: max-content 10vh auto max-content;
+    grid-template-columns: none;
+}
+
+@media (max-width: 550px) {
+    .lane {
+        grid-template-columns: max-content 15vw auto max-content;
+        grid-template-rows: none;
+        align-items: center;
+    }
+}

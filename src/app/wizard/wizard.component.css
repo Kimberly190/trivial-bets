@@ -70,6 +70,12 @@ button.button-refresh {
   height: 80vh;
 }
 
+@media (max-height: 500px) {
+  #p3-waiting {
+      height: 75vh;
+  }
+}
+
 /* HACK need to fix - commented out for now */
 #p6-bet > .bet > .red-chip {
   left: calc(100% / 2 - 10vw / 2);
