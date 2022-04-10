@@ -8,4 +8,18 @@
   <body>
     <app-main>Trivial Bets loading...</app-main>
   </body>
+  <!-- TODO HACK find a better way / remove if routing implemented -->
+  <script type="text/javascript">
+    window.onload = function() {
+      window.onbeforeunload = (event) => {
+        const e = event || window.event;
+        // Cancel the event
+        e.preventDefault();
+        if (e) {
+          e.returnValue = ''; // Legacy method for cross browser support
+        }
+        return ''; // Legacy method for cross browser support
+      };
+    }
+  </script>
 </html>
