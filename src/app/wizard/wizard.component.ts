@@ -136,6 +136,7 @@ export class WizardComponent implements OnInit {
       error => {
         //TODO handle
         console.log('error creating player in wizard: ', error);
+        window.alert('Could not join game: ' + error.error);
       }
     ).add(() => { this.loading = false; });
   }
