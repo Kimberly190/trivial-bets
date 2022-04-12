@@ -1,9 +1,16 @@
 .player-status {
+    min-width: 0;
     position: relative;
     margin: .2rem;
     flex: 1 1;
 
     border-radius: 5px;
+}
+
+.player-status > h3 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .chip-grid {

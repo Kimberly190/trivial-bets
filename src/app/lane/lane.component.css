@@ -11,7 +11,7 @@ h2 {
 
 .lane-space {
     position: relative;
-    max-height: 40vh;
+    max-height: 70%;
 
     display: flex;
     flex-direction: column;
@@ -20,8 +20,24 @@ h2 {
     flex-wrap: wrap;
 }
 
+.answer-flex {
+    display: flex;
+    flex-direction: row;
+    min-width: 0;
+}
+
 .player-card {
-    margin: .3rem;
+    min-width: 4rem;
+    min-height: 2rem;
+    margin: 0.4vh 0.4vw;
+}
+
+.card-wrapper {
+    overflow: hidden;
+}
+
+.card-wrapper:last-child, .card-wrapper:hover {
+    overflow: visible;
 }
 
 .bet {
@@ -52,19 +68,29 @@ h2 {
 
 #watermark {
     position: absolute;
-    /* TODO - % isn't perfect for these - change to have text float centrally within an outer absolute div? */
-    left: 43%;
     top: 6%;
 
     writing-mode: vertical-rl;
     font-weight: bold;
-    /* font-size: 1.25rem; */
     font-size: min(3.5vw, 4vh);
     opacity: 0.3;
     white-space: nowrap;
 }
 
 @media (max-width: 550px) {
+    .lane-space {
+        flex-direction: row;
+        max-height: revert;
+    }
+    .answer-flex {
+        flex-direction: column;
+        min-width: revert;
+        min-height: 0;
+    }
+    .bet-button {
+        margin-right: 1vw;
+        margin-bottom: auto;
+    }
     #undercut-lane {
         grid-column: 2 / 4;
         grid-row: 1 / 2;
@@ -79,11 +105,13 @@ h2 {
         writing-mode: initial;
         font-size: 1.25rem;
     }
+}
+
+@media (max-height: 801px) {
     .lane-space {
-        flex-direction: row;
+        max-height: 50%;
     }
-    .bet-button {
-        margin-right: 1vw;
-        margin-bottom: auto;
+    .lane-space .bet {
+        flex-basis: 25%;
     }
 }

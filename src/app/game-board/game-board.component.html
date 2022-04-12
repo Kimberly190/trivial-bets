@@ -1,3 +1,3 @@
-<section id="gameboard">
+<section id="gameboard" [ngClass]="visibleLaneCount > 5 ? 'narrow-lanes' : ''">
   <app-lane *ngFor="let item of laneData" [laneData]=item [bets]=item.bets [answers]=item.answers [betsByUser]=betsByUser [ngClass]="(item.answers.length == 0 && item.lane !== 0) ? 'hidden' : 'lane'" (bet)="onBet($event)"></app-lane>
 </section>

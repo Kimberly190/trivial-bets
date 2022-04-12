@@ -96,16 +96,28 @@ button:hover {
 }
 
 .player-card {
+    min-width: 0;
     font-size: 0.75rem;
     border-radius: 5px;
     box-shadow: 3px 3px 5px var(--theme-color-shade, #888888);
 }
 
+.player-card > h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.narrow-lanes .player-card {
+    max-width: 10vw;
+}
+
 .chip, .bet-button {
-    width: min(10vw, 10vh);
-    max-width: 60px;
-    height: min(10vw, 10vh);
-    max-height: 60px;
+    max-width: min(10vw, 10vh);
+    min-width: 3rem;
+    max-height: min(10vw, 10vh);
+    min-height: 3rem;
+    aspect-ratio: 1 / 1;
     margin: auto;
 
     border-radius: 50%;
@@ -159,6 +171,9 @@ button:hover {
     }
     #gameboard {
         flex-direction: column-reverse;
+    }
+    .narrow-lanes .player-card {
+        max-width: revert;
     }
 }
 

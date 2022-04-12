@@ -22,6 +22,10 @@ export class GameBoardComponent implements OnInit {
   constructor(
   ) { }
 
+  get visibleLaneCount() {
+    return (this.laneData as any[]).filter(x => x.answers.length > 0).length;
+  }
+
   ngOnInit() {
 
   }

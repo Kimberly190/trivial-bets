@@ -1,8 +1,10 @@
 <h2>PAYS<br>{{ laneData.payout }} to 1</h2>
-<div *ngIf="answers && answers.length > 0">
-  <div *ngFor="let answer of answers" class="player-card player-{{answer.playerNumber}}">
-    <h4>{{answer.name}}</h4>
-    {{answer.guess}}
+<div *ngIf="answers && answers.length > 0" class="answer-flex">
+  <div *ngFor="let answer of answers" class="card-wrapper">
+    <div class="player-card player-{{answer.playerNumber}}">
+      <h4>{{answer.name}}</h4>
+      <span>{{answer.guess}}</span>
+    </div>
   </div>
 </div>
 <div class="lane-space" [attr.id]="laneData.lane == 0 ? 'undercut-lane' : null">

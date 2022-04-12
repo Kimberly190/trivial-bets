@@ -11,7 +11,7 @@
     <h2>New Game</h2>
     <fieldset>
       <label>Your name:</label>
-      <input tabindex="1" #nameInput type="text" required [(ngModel)]="player.name" placeholder="name">
+      <input tabindex="1" #nameInput type="text" required maxlength="15" [(ngModel)]="player.name" placeholder="name">
     </fieldset>
     <fieldset [hidden]="player.isHost">
       <label>Room code:</label>
@@ -106,6 +106,17 @@
   <div id="p10-score-update" [hidden]="!(page == PAGE_NUM_SCORES)">
     <h2>Scores: Question {{questionNumber}}</h2>
     <label>The answer was: <strong>{{question.correctAnswer}}!</strong></label>
+    <!-- TODO resolve worklflow after scores -->
+    <!-- <fieldset [hidden]="player.isHost">
+      <label>Please wait for the host.<br></label>
+      <app-spinner></app-spinner>
+      <label><strong>Ready?</strong></label>
+    </fieldset> -->
+    <!-- TODO hide on click -->
+    <button (click)="endQuestion()">Continue &gt;</button>
+    <!-- TODO test: -->
+    <app-spinner [hidden]="canRetry" class="wait"></app-spinner>
+    <button [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
     <div class="result-flex">
       <div *ngFor="let result of otherResults" class="player-card player-{{result.player.playerNumber}}">
         <h3>{{result.player.name}}</h3>
@@ -114,17 +125,6 @@
       </div>
     </div>
     <p class="hint">You always get your white player chips back.</p>
-    <!-- TODO resolve worklflow after scores -->
-    <!-- <fieldset [hidden]="player.isHost">
-      <label>Please wait for the host.<br></label>
-      <app-spinner></app-spinner>
-      <label><strong>Ready?</strong></label>
-    </fieldset> -->
-    <!-- <app-spinner></app-spinner> -->
-    <button (click)="endQuestion()">Continue &gt;</button>
-    <!-- TODO test: -->
-    <app-spinner></app-spinner>
-    <button [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
   </div>
   <div id="p11--final scores" [hidden]="!(page == PAGE_NUM_FINAL)">
     <h2>Final Scores!</h2>
