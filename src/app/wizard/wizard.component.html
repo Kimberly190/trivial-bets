@@ -4,11 +4,12 @@
   <div id="p1-welcome" [hidden]="!(page == PAGE_NUM_WELCOME)">
     <p>Ages 8+ | 3 to 7 players</p>
     <h2>Welcome!</h2>
-    <button (click)="joinGame()">Join a Game</button>
-    <button (click)="hostNewGame()">Host a New Game</button>
+    <button class="button-action" (click)="joinGame()">Join a Game</button>
+    <button class="button-action" (click)="hostNewGame()">Host a New Game</button>
   </div>
   <div id="p2-new-game" [hidden]="!(page == PAGE_NUM_NEW_GAME)">
-    <h2>New Game</h2>
+    <h2 [hidden]="!player.isHost">Host a New Game</h2>
+    <h2 [hidden]="player.isHost">Join a Game</h2>
     <fieldset>
       <label>Your name:</label>
       <input tabindex="1" #nameInput type="text" required maxlength="15" [(ngModel)]="player.name" placeholder="name">
@@ -17,20 +18,21 @@
       <label>Room code:</label>
       <input tabindex="2" type="number" required [(ngModel)]="player.gameRoomId" placeholder="room code" />
     </fieldset>
-    <button (click)="addPlayer()">Go!</button>
-    <button (click)="back()">&lt; Back</button>
+    <button class="button-action" (click)="addPlayer()">Go!</button>
+    <button class="button-action" (click)="back()">&lt; Back</button>
   </div>
   <div id="p3-waiting" class="flex-column" [hidden]="!(page == PAGE_NUM_WAITING)">
     <h2>Ready?</h2>
-    <label>Share this room code with all players: <strong>{{gameRoom ? gameRoom.id : ''}}</strong><br></label>
+    <label>Share this room code with all players:</label>
+    <h2>{{gameRoom ? gameRoom.id : ''}}</h2>
     <ng-container *ngIf="player.isHost; else elseBlock">
       <label>Click the button to start the game!</label>
-      <button (click)="nextQuestion()">Everyone's here!</button>
+      <button class="button-action" (click)="nextQuestion()">Everyone's here!</button>
     </ng-container>
     <ng-template #elseBlock>
       <label>Please wait for the host to start the game.</label>
       <app-spinner [hidden]="canRetry" class="wait"></app-spinner>
-      <button [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
+      <button class="button-action" [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
     </ng-template>
     <button class="button-refresh flex-column-end" (click)="refreshPlayers()">Refresh &#x21bb;</button>
   </div>
@@ -39,7 +41,7 @@
     <label>Host, please read the question.<br></label>
     <label>Everyone, enter your guess:</label>
     <input tabindex="3" #guessInput type="number" required [(ngModel)]="answer.guess" placeholder="guess">
-    <button (click)="submitAnswer()">Submit</button>
+    <button class="button-action" (click)="submitAnswer()">Submit</button>
     <app-css-hourglass></app-css-hourglass>
   </div>
   <div id="p5-show-answers" [hidden]="!(page == PAGE_NUM_SHOW_A)">
@@ -51,7 +53,7 @@
     <h3>Betting on: {{(betAnswerValue > 0 ? betAnswerValue : 'ALL TOO HIGH')}}</h3>
     <label>How many to bet?</label>
     <input tabIndex="4" #betInput type="number" required [(ngModel)]="bet.amount" placeholder="amount">
-    <button (click)="submitBet()">Submit</button>
+    <button class="button-action" (click)="submitBet()">Submit</button>
     <!-- TODO resolve image / spinner for this page -->
     <!-- <div class="bet">
       <div class="chip placeholder"></div>
@@ -60,15 +62,15 @@
     </div> -->
     <!-- <app-css-hourglass></app-css-hourglass> -->
     <!-- <img src="../../assets/poker-chip-flat.gif" /> -->
-    <img src = 'http://i.imgur.com/5eaUapF.gif'/>
+    <img src = 'https://i.imgur.com/5eaUapF.gif'/>
   </div>
   <div id="p7-show-bets" [hidden]="!(page == PAGE_NUM_SHOW_BETS)">
     <button class="button-refresh" (click)="refreshBets()">Refresh &#x21bb;</button>
-    <p class="hint">Place two bets.  They can be on the same or different lanes.</p>
+    <p class="hint" [hidden]="betsPlaced === 2">Place two bets.  They can be on the same or different lanes.</p>
     <app-spinner></app-spinner>
-    <fieldset [hidden]="betsPlaced < 2">
+    <fieldset [hidden]="betsPlaced !== 2" class="flex-fields">
       <label>All bets in?</label>
-      <button (click)="goToResults()">Get Results &gt;</button>
+      <button class="button-action" (click)="goToResults()">Get Results &gt;</button>
     </fieldset>
   </div>
   <div id="p8-showtime" [hidden]="!(page == PAGE_NUM_SHOWTIME)">
@@ -78,17 +80,18 @@
     <fieldset [hidden]="!player.isHost">
       <label>Enter the correct answer:</label>
       <input tabindex="5" #answerInput type="number" required [(ngModel)]="question.correctAnswer" placeholder="correct answer">
-      <button (click)="updateQuestionGetResults()">Submit</button>
+      <button class="button-action" (click)="updateQuestionGetResults()">Submit</button>
     </fieldset>
     <fieldset [hidden]="player.isHost">
       <label>Please wait for the host to submit the correct answer.<br></label>
       <app-spinner [hidden]="canRetry" class="wait"></app-spinner>
-      <button [hidden]="!canRetry" (click)="updateQuestionGetResults()">Check again...</button>
+      <button class="button-action" [hidden]="!canRetry" (click)="updateQuestionGetResults()">Check again...</button>
     </fieldset>
   </div>
   <div id="p9-winning-guesses" [hidden]="!(page == PAGE_NUM_WINNING_G)">
     <h2>Question {{questionNumber}} Results</h2>
     <label>The answer was: <strong>{{question.correctAnswer}}!</strong></label>
+    <button class="button-action" (click)="getPlayerCredits()">See all results &gt;</button>
     <div *ngFor="let winningGuess of winningGuesses" class="result-grid">
       <div class="player-card player-{{winningGuess.player.playerNumber}}">
         <h3>{{winningGuess.player.name}}</h3>
@@ -101,22 +104,13 @@
     <div *ngIf="!winningGuesses?.length">
       <label>All guesses were too high!</label>
     </div>
-    <button (click)="getPlayerCredits()">See all results &gt;</button>
   </div>
   <div id="p10-score-update" [hidden]="!(page == PAGE_NUM_SCORES)">
     <h2>Scores: Question {{questionNumber}}</h2>
     <label>The answer was: <strong>{{question.correctAnswer}}!</strong></label>
-    <!-- TODO resolve worklflow after scores -->
-    <!-- <fieldset [hidden]="player.isHost">
-      <label>Please wait for the host.<br></label>
-      <app-spinner></app-spinner>
-      <label><strong>Ready?</strong></label>
-    </fieldset> -->
-    <!-- TODO hide on click -->
-    <button (click)="endQuestion()">Continue &gt;</button>
-    <!-- TODO test: -->
-    <app-spinner [hidden]="canRetry" class="wait"></app-spinner>
-    <button [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
+    <button class="button-action" [hidden]="laneData.length === 0" (click)="nextQuestion(); ">Continue &gt;</button>
+    <app-spinner [hidden]="canRetry"></app-spinner>
+    <button class="button-action" [hidden]="!canRetry" (click)="nextQuestion(true)">Check again...</button>
     <div class="result-flex">
       <div *ngFor="let result of otherResults" class="player-card player-{{result.player.playerNumber}}">
         <h3>{{result.player.name}}</h3>
@@ -129,10 +123,11 @@
   <div id="p11--final scores" [hidden]="!(page == PAGE_NUM_FINAL)">
     <h2>Final Scores!</h2>
     <div class="result-flex">
-      <div *ngFor="let player of players" class="player-card player-{{player.playerNumber}}">
+      <div *ngFor="let player of playersByScore" class="player-card player-{{player.playerNumber}}">
         <h3>{{player.name}}</h3>
         {{player.score}}
       </div>
     </div>
+    <label>Thanks for playing!</label>
   </div>
 </div>

@@ -52,6 +52,8 @@ export class WizardComponent implements OnInit {
 
   get players() : models.Player[] { return this.gameApiService.players; }
 
+  get playersByScore() : models.Player[] { return this.players.sort((a, b) => { return b.score - a.score; }); }
+
   // State properties
   questionNumber: number = 0;
   //TODO contrast with http interceptor for loading solution
@@ -149,99 +151,108 @@ export class WizardComponent implements OnInit {
   nextQuestion(isRetry: boolean = false) {
     console.log('nextQuestion() called, questionNumber: ' + this.questionNumber);
 
-    this.loading = true;
-    if (!isRetry) {
-      this.questionNumber++; //TODO remove when data-bound?
-    }
+    if (this.questionNumber == this.MAX_QUESTION) {
+      this.getFinalScores();
+    } else {
+      // Reset.
+      this.answer = { id: undefined, guess: undefined, playerId: undefined, questionId: undefined };
+      this.bet = { id: undefined, amount: undefined, payout: undefined, playerId: undefined, answerId: undefined };
+      this.laneData.length = 0;
 
-    //TODO: PUT flag on gameRoom to block late joiners?
+      this.loading = true;
+      if (!isRetry) {
+        this.questionNumber++; //TODO remove when data-bound?
+      }
 
-    if (this.player.isHost) {
-      // Host creates the question...
-      this.gameApiService.createQuestion(this.gameRoom.id, this.questionNumber).subscribe(
-        (data: models.Question) => {
+      //TODO: PUT flag on gameRoom to block late joiners?
+
+      if (this.player.isHost) {
+        // Host creates the question...
+        this.gameApiService.createQuestion(this.gameRoom.id, this.questionNumber).subscribe(
+          (data: models.Question) => {
+            this.question = data;
+            this.answer.questionId = this.question.id;
+            this.answer.playerId = this.player.id;
+
+            // Also create the 'default' answer for the question.  No dependent UI updates.
+            this.gameApiService.createAnswer(
+              {
+                id: undefined,
+                guess: this.DEFAULT_ANSWER,
+                playerId: undefined,
+                questionId: this.question.id
+              }
+            ).subscribe(
+              data => {
+                if (this.questionNumber === 1) {
+                  // Make sure all players are known to this instance at start of game.
+                  this.refreshPlayers();
+                }
+
+                //TODO - anything else?
+              },
+              error => {
+                //TODO handle
+                console.log('error creating default quesiton in wizard: ', error);
+              }
+            );
+
+            this.page = this.PAGE_NUM_ANSWER_Q;
+          },
+          error => {
+            //TODO handle
+            console.log('error creating question in wizard: ', error);
+          }
+        ).add(() => {
+          this.loading = false;
+          this.setFocusOn(this._guessInput);
+        });
+      } else {
+        // ..other players just get it.
+        //TODO check alt method of polling with retry, delay, back-off
+        //https://medium.com/angular-in-depth/retry-failed-http-requests-in-angular-f5959d486294
+
+        this.canRetry = false;
+
+        //https://stackoverflow.com/questions/63058012/angular-rxjs-poll-http-request-until-timeout-or-positive-response-from-server
+        //TODO remove initial delay?
+        interval(3000).pipe(
+          switchMap(() => this.gameApiService.getQuestion(this.gameRoom.id, this.questionNumber)),
+
+          filter((data: models.Question) => {
+            //console.log('got question data: ' + JSON.stringify(data));
+            return data && data.id > 0;
+          }),
+
+          // Emit only the first value emitted by the source
+          take(1),
+
+          // Time out after 15 seconds
+          timeout(15000),
+        ).subscribe((data: models.Question) => {
+          if (this.questionNumber === 1) {
+            // Make sure all players are known to this instance at start of game.
+            this.refreshPlayers();
+          }
+          
           this.question = data;
           this.answer.questionId = this.question.id;
           this.answer.playerId = this.player.id;
 
-          // Also create the 'default' answer for the question.  No dependent UI updates.
-          this.gameApiService.createAnswer(
-            {
-              id: undefined,
-              guess: this.DEFAULT_ANSWER,
-              playerId: undefined,
-              questionId: this.question.id
-            }
-          ).subscribe(
-            data => {
-              if (this.questionNumber === 1) {
-                // Make sure all players are known to this instance at start of game.
-                this.refreshPlayers();
-              }
-
-              //TODO - anything else?
-            },
-            error => {
-              //TODO handle
-              console.log('error creating default quesiton in wizard: ', error);
-            }
-          );
-
+          // this.questionNumber++; //TODO remove when data-bound?
           this.page = this.PAGE_NUM_ANSWER_Q;
         },
-        error => {
-          //TODO handle
-          console.log('error creating question in wizard: ', error);
-        }
-      ).add(() => {
-        this.loading = false;
-        this.setFocusOn(this._guessInput);
-      });
-    } else {
-      // ..other players just get it.
-      //TODO check alt method of polling with retry, delay, back-off
-      //https://medium.com/angular-in-depth/retry-failed-http-requests-in-angular-f5959d486294
-
-      this.canRetry = false;
-
-      //https://stackoverflow.com/questions/63058012/angular-rxjs-poll-http-request-until-timeout-or-positive-response-from-server
-      //TODO remove initial delay?
-      interval(3000).pipe(
-        switchMap(() => this.gameApiService.getQuestion(this.gameRoom.id, this.questionNumber)),
-
-        filter((data: models.Question) => {
-          //console.log('got question data: ' + JSON.stringify(data));
-          return data && data.id > 0;
-        }),
-
-        // Emit only the first value emitted by the source
-        take(1),
-
-        // Time out after 15 seconds
-        timeout(15000),
-      ).subscribe((data: models.Question) => {
-        if (this.questionNumber === 1) {
-          // Make sure all players are known to this instance at start of game.
-          this.refreshPlayers();
-        }
-        
-        this.question = data;
-        this.answer.questionId = this.question.id;
-        this.answer.playerId = this.player.id;
-
-        // this.questionNumber++; //TODO remove when data-bound?
-        this.page = this.PAGE_NUM_ANSWER_Q;
-      },
-        error => {
-          //TODO handle
-          console.log('error getting question in wizard: ', error);
-          this.canRetry = true;
-        }
-      ).add(() => {
-        console.log("polling complete");
-        this.loading = false;
-        this.setFocusOn(this._guessInput);
-      });
+          error => {
+            //TODO handle
+            console.log('error getting question in wizard: ', error);
+            this.canRetry = true;
+          }
+        ).add(() => {
+          console.log("polling complete");
+          this.loading = false;
+          this.setFocusOn(this._guessInput);
+        });
+      }
     }
   }
 
@@ -428,7 +439,7 @@ export class WizardComponent implements OnInit {
     this.gameApiService.getResultsForQuestion(this.question.id).subscribe(
       (data: models.Result[]) => {
 
-        this.allResults = data.sort((ra, rb) => { return ra > rb ? -1 : 1 });
+        this.allResults = data.sort((ra, rb) => { return rb.credit - ra.credit });
         this.allResults.forEach(r => {
           // Populate player and answer to simplify display logic.
           r.player = this.gameApiService.players.find(p => p.id == r.playerId);
@@ -477,19 +488,6 @@ export class WizardComponent implements OnInit {
   getPlayerCredits() {
     this.refreshPlayers();
     this.page++;
-  }
-
-  endQuestion() {
-    if (this.questionNumber == this.MAX_QUESTION) {
-      this.getFinalScores();
-    } else {
-      // Reset.
-      this.answer = { id: undefined, guess: undefined, playerId: undefined, questionId: undefined };
-      this.bet = { id: undefined, amount: undefined, payout: undefined, playerId: undefined, answerId: undefined };
-      this.laneData.length = 0;
-      
-      this.nextQuestion();
-    }
   }
 
   getFinalScores() {
