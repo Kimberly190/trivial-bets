@@ -264,6 +264,12 @@ export class WizardComponent implements OnInit {
   }
 
   submitAnswer() {
+    //TODO should minimum guess be 1?
+    if (this.answer.guess < 0) {
+      window.alert('The minimum guess is 0.');
+      return;
+    }
+    
     this.loading = true;
 
     this.gameApiService.createAnswer(this.answer).subscribe(
