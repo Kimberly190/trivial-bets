@@ -38,7 +38,7 @@ main {
 h1 {
     font-family: 'Luckiest Guy', 'Trebuchet MS', Arial, sans-serif;
     font-size: 2.5rem;
-    text-shadow: 1px 1px 3px var(--theme-color-shade-dark, #222222);
+    text-shadow: 2px 2px 4px var(--theme-color-shade-dark, #222222);
     color: var(--theme-color-mid, #96e0a0);
 }
 
@@ -61,6 +61,10 @@ fieldset {
     border: none;
 }
 
+button {
+    font-family: inherit;
+}
+
 .flex-column {
     display: flex;
     flex-direction: column;
@@ -81,6 +85,12 @@ button:hover {
   
 .wait .spinner {
     display: block;
+}
+
+.flex-fields {
+    display: flex;
+    width: max-content;
+    align-items: center;
 }
 
 

@@ -109,7 +109,8 @@ h2 {
 
 @media (max-height: 801px) {
     .lane-space {
-        max-height: 50%;
+        /* TODO this is not stopping the bet buttons going off, but is messing up chip layout */
+        /* max-height: 50%; */
     }
     .lane-space .bet {
         flex-basis: 25%;

@@ -4,10 +4,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 10px;
 }
 
-/* TODO refine */
-#wizard * {
+* {
   margin: 10px auto;
 }
 
@@ -19,12 +19,17 @@
   cursor: wait !important;
 }
 
+input, button, label {
+  font-size: inherit;
+}
+
 input, button {
   border-radius: 5px;
   border: 2px solid var(--theme-color-dark, #315a36);
   box-shadow: 3px 3px 10px var(--theme-color-shade, #888888);
   display: block;
-  width: 150px;
+  width: 25vw;
+  max-width: 200px;
   height: 2rem;
 }
 
@@ -70,6 +75,15 @@ button.button-refresh {
   height: 80vh;
 }
 
+@media (max-width: 550px) {
+  input, button {
+    width: 100%;
+  }
+  input, button, label {
+    font-size: inherit;
+  }
+}
+
 @media (max-height: 500px) {
   #p3-waiting {
       height: 75vh;
@@ -82,6 +96,10 @@ button.button-refresh {
 }
 #p6-bet > .bet > .blue-chip {
   left: calc(100% / 2 - 10vw / 2 + 5px);
+}
+
+#p7-show-bets fieldset * {
+  margin: 10px;
 }
 
 #p10-score-update {
