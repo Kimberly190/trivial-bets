@@ -63,6 +63,7 @@ export class WizardComponent implements OnInit {
   //TODO replace this + allAnswersIn with single property / or binding?
   betsByUser: number;
   betAmountTotal: number = 0;
+  allBetsIn: boolean = false;
   page: number;
   canRetry: boolean = false;
 
@@ -320,7 +321,7 @@ export class WizardComponent implements OnInit {
 
     this.showGameBoard = false;
     this.page = this.PAGE_NUM_BET;
-    
+
     this.setFocusOn(this._betInput);
   }
 
@@ -372,6 +373,7 @@ export class WizardComponent implements OnInit {
       (data: models.Bet[]) => {
         var bets = data;
         this.gameApiService.setBets(this.laneData, bets);
+        this.allBetsIn = bets.length == this.players.length * 2;
       },
       error => {
         //TODO handle

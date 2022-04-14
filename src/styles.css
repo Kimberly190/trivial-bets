@@ -87,12 +87,6 @@ button:hover {
     display: block;
 }
 
-.flex-fields {
-    display: flex;
-    width: max-content;
-    align-items: center;
-}
-
 
 #gameboard {
     max-width: 1000px;

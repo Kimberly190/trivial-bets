@@ -65,13 +65,10 @@
     <img src = 'https://i.imgur.com/5eaUapF.gif'/>
   </div>
   <div id="p7-show-bets" [hidden]="!(page == PAGE_NUM_SHOW_BETS)">
-    <button class="button-refresh" (click)="refreshBets()">Refresh &#x21bb;</button>
-    <p class="hint" [hidden]="betsPlaced === 2">Place two bets.  They can be on the same or different lanes.</p>
+    <button class="button-refresh" [hidden]="allBetsIn" (click)="refreshBets()">Refresh &#x21bb;</button>
+    <p class="hint" [hidden]="betsByUser === 2">Place two bets.  They can be on the same or different lanes.</p>
     <app-spinner></app-spinner>
-    <fieldset [hidden]="betsPlaced !== 2" class="flex-fields">
-      <label>All bets in?</label>
-      <button class="button-action" (click)="goToResults()">Get Results &gt;</button>
-    </fieldset>
+    <button class="button-action" [hidden]="!allBetsIn" (click)="goToResults()">Get Results &gt;</button>
   </div>
   <div id="p8-showtime" [hidden]="!(page == PAGE_NUM_SHOWTIME)">
     <h2>Showtime!</h2>
