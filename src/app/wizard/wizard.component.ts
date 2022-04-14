@@ -60,12 +60,11 @@ export class WizardComponent implements OnInit {
   @HostBinding('class.wait') loading: boolean = false;
   showGameBoard: boolean = false;
   laneData: any[] = []; //TODO remove init if not needed
-  betsPlaced: number = 0;
+  //TODO replace this + allAnswersIn with single property / or binding?
+  betsByUser: number;
   betAmountTotal: number = 0;
   page: number;
   canRetry: boolean = false;
-  //TODO replace this + allAnswersIn with single property / or binding?
-  betsByUser: number;
 
   @ViewChild("nameInput") _nameInput: ElementRef;
   @ViewChild("guessInput") _guessInput: ElementRef;
@@ -269,9 +268,9 @@ export class WizardComponent implements OnInit {
 
         //TODO get all answers & poll
 
-        this.betsPlaced = 0;
         this.betAmountTotal = 0;
         this.betsByUser = 0;
+
         this.showGameBoard = true;
         this.page++;
 
@@ -305,7 +304,7 @@ export class WizardComponent implements OnInit {
   }
 
   onBet(bet: models.Bet) {
-    if (this.betsPlaced >= 2) {
+    if (this.betsByUser >= 2) {
       window.alert('You can only bet two times.');
       return;
     }
@@ -319,8 +318,9 @@ export class WizardComponent implements OnInit {
       this.bet.answerId = this.defaultAnswer.id;
     }
 
-    this.page = this.PAGE_NUM_BET;
     this.showGameBoard = false;
+    this.page = this.PAGE_NUM_BET;
+    
     this.setFocusOn(this._betInput);
   }
 
@@ -345,16 +345,15 @@ export class WizardComponent implements OnInit {
 
     this.loading = true;
 
-    this.betAmountTotal += this.bet.amount;
-    this.betsByUser++;
-
     this.gameApiService.createBet(this.bet).subscribe(
       (data: models.Bet) => {
         this.bet = data;
 
-        this.page = this.PAGE_NUM_SHOW_BETS;
-        this.betsPlaced++;
+        this.betAmountTotal += this.bet.amount;
+        this.betsByUser++;
+
         this.showGameBoard = true;
+        this.page = this.PAGE_NUM_SHOW_BETS;
 
         this.refreshBets();
       },
@@ -383,8 +382,8 @@ export class WizardComponent implements OnInit {
   }
 
   goToResults() {
-    this.page++;
     this.showGameBoard = false;
+    this.page++;
 
     if (this.player.isHost) {
       this.setFocusOn(this._answerInput);
