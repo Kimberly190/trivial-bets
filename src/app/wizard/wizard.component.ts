@@ -94,6 +94,7 @@ export class WizardComponent implements OnInit {
       },
       error => {
         //TODO handle
+        window.alert('Failed to create game room: ' + error.error);
         console.log('error creating gameRoom in wizard: ', error);
       }
     ).add(() => {
@@ -137,8 +138,8 @@ export class WizardComponent implements OnInit {
       },
       error => {
         //TODO handle
-        console.log('error creating player in wizard: ', error);
-        window.alert('Could not join game: ' + error.error);
+        console.log('Failed to add player: ', error);
+        window.alert('error adding player in wizard: ' + error.error);
       }
     ).add(() => { this.loading = false; });
   }
@@ -193,7 +194,8 @@ export class WizardComponent implements OnInit {
               },
               error => {
                 //TODO handle
-                console.log('error creating default quesiton in wizard: ', error);
+                window.alert('Failed to get game question: ' + error.error);
+                console.log('error creating default question in wizard: ', error);
               }
             );
 
@@ -201,6 +203,7 @@ export class WizardComponent implements OnInit {
           },
           error => {
             //TODO handle
+            window.alert('Failed to get game question: ' + error.error);
             console.log('error creating question in wizard: ', error);
           }
         ).add(() => {
@@ -244,6 +247,7 @@ export class WizardComponent implements OnInit {
         },
           error => {
             //TODO handle
+            window.alert('Failed to get game question: ' + error.error);
             console.log('error getting question in wizard: ', error);
             this.canRetry = true;
           }
@@ -276,6 +280,7 @@ export class WizardComponent implements OnInit {
       },
       error => {
         //TODO handle
+        window.alert('Failed to submit answer: ' + error.error);
         console.log('error creating answer in wizard: ', error);
       }
     ).add(() => { this.loading = false; });
@@ -293,6 +298,7 @@ export class WizardComponent implements OnInit {
       },
       error => {
         //TODO handle
+        window.alert('Failed to refresh: ' + error.error);
         console.log('error refreshing answers in wizard: ', error);
       }
     ).add(() => { this.loading = false; });
@@ -354,6 +360,7 @@ export class WizardComponent implements OnInit {
       },
       error => {
         //TODO handle
+        window.alert('Failed to submit bet: ' + error.error);
         console.log('error submitting bet in wizard: ', error);
       }
     ).add(() => { this.loading = false; });
@@ -369,6 +376,7 @@ export class WizardComponent implements OnInit {
       },
       error => {
         //TODO handle
+        window.alert('Failed to refresh: ' + error.error);
         console.log('error refreshing answers in wizard: ', error);
       }
     ).add(() => { this.loading = false; });
@@ -398,6 +406,7 @@ export class WizardComponent implements OnInit {
         },
         error => {
           //TODO handle
+          window.alert('Failed to update question: ' + error.error);
           console.log('error updating question in wizard: ', error);
         }
       ).add(() => { this.loading = false; });
@@ -426,6 +435,7 @@ export class WizardComponent implements OnInit {
       },
         error => {
           //TODO handle
+          window.alert('Failed to get results: ' + error.error);
           console.log('error getting question results in wizard: ', error);
           this.canRetry = true;
         }
@@ -457,6 +467,7 @@ export class WizardComponent implements OnInit {
       },
       error => {
         //TODO handle
+        window.alert('Failed to get results: ' + error.error);
         console.log('error getting results in wizard: ', error);
       }
     ).add(() => { this.loading = false; });
@@ -479,6 +490,7 @@ export class WizardComponent implements OnInit {
         },
         error => {
           //TODO handle
+          window.alert('Failed to update player: ' + error.error);
           console.log('error updating player in wizard: ', error);
         }
       ).add(() => { this.loading = false; });
