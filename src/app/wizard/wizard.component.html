@@ -12,11 +12,11 @@
     <h2 [hidden]="player.isHost">Join a Game</h2>
     <fieldset>
       <label>Your name:</label>
-      <input tabindex="1" #nameInput type="text" required maxlength="15" [(ngModel)]="player.name" placeholder="name">
+      <input tabindex="1" #nameInput type="text" required maxlength="15" [(ngModel)]="player.name" placeholder="name" (keyup.enter)="addPlayer()">
     </fieldset>
     <fieldset [hidden]="player.isHost">
       <label>Room code:</label>
-      <input tabindex="2" type="number" required [(ngModel)]="player.gameRoomId" placeholder="room code" />
+      <input tabindex="2" type="number" required [(ngModel)]="player.gameRoomId" placeholder="room code" (keyup.enter)="addPlayer()" />
     </fieldset>
     <button class="button-action" (click)="addPlayer()">Go!</button>
     <button class="button-action" (click)="back()">&lt; Back</button>
@@ -40,7 +40,7 @@
     <h2>Question {{questionNumber}}</h2>
     <label>Host, please read the question.<br></label>
     <label>Everyone, enter your guess:</label>
-    <input tabindex="3" #guessInput type="number" required [(ngModel)]="answer.guess" placeholder="guess">
+    <input tabindex="3" #guessInput type="number" required [(ngModel)]="answer.guess" placeholder="guess" (keyup.enter)="submitAnswer()">
     <button class="button-action" (click)="submitAnswer()">Submit</button>
     <app-css-hourglass></app-css-hourglass>
   </div>
@@ -52,7 +52,7 @@
     <h2>Question {{questionNumber}}</h2>
     <h3>Betting on: {{(betAnswerValue > 0 ? betAnswerValue : 'ALL TOO HIGH')}}</h3>
     <label>How many to bet?</label>
-    <input tabIndex="4" #betInput type="number" required [(ngModel)]="bet.amount" placeholder="amount">
+    <input tabIndex="4" #betInput type="number" required [(ngModel)]="bet.amount" placeholder="amount" (keyup.enter)="submitBet()">
     <button class="button-action" (click)="submitBet()">Submit</button>
     <!-- TODO resolve image / spinner for this page -->
     <!-- <div class="bet">
@@ -76,7 +76,7 @@
     <!-- TODO use this approach to hidden for all host/other splits?-->
     <fieldset [hidden]="!player.isHost">
       <label>Enter the correct answer:</label>
-      <input tabindex="5" #answerInput type="number" required [(ngModel)]="question.correctAnswer" placeholder="correct answer">
+      <input tabindex="5" #answerInput type="number" required [(ngModel)]="question.correctAnswer" placeholder="correct answer" (keyup.enter)="updateQuestionGetResults()">
       <button class="button-action" (click)="updateQuestionGetResults()">Submit</button>
     </fieldset>
     <fieldset [hidden]="player.isHost">

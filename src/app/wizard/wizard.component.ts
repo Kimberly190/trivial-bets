@@ -194,7 +194,8 @@ export class WizardComponent implements OnInit {
               },
               error => {
                 //TODO handle
-                window.alert('Failed to get game question: ' + error.error);
+                //TODO silent or notify?
+                //window.alert('Failed to get game question: ' + error.error);
                 console.log('error creating default question in wizard: ', error);
               }
             );
@@ -203,7 +204,8 @@ export class WizardComponent implements OnInit {
           },
           error => {
             //TODO handle
-            window.alert('Failed to get game question: ' + error.error);
+            //TODO silent or notify?
+            //window.alert('Failed to get game question: ' + error.error);
             console.log('error creating question in wizard: ', error);
           }
         ).add(() => {
@@ -247,7 +249,8 @@ export class WizardComponent implements OnInit {
         },
           error => {
             //TODO handle
-            window.alert('Failed to get game question: ' + error.error);
+            //TODO silent or notify?
+            //window.alert('Failed to get game question: ' + error.error);
             console.log('error getting question in wizard: ', error);
             this.canRetry = true;
           }
