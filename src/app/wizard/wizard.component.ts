@@ -62,8 +62,9 @@ export class WizardComponent implements OnInit {
   laneData: any[] = []; //TODO remove init if not needed
   //TODO replace this + allAnswersIn with single property / or binding?
   betsByUser: number;
-  betAmountTotal: number = 0;
+  betsByUserAmount: number = 0;
   allBetsIn: boolean = false;
+  totalBetCount: number = 0;
   page: number;
   canRetry: boolean = false;
 
@@ -126,7 +127,7 @@ export class WizardComponent implements OnInit {
         this.player = data;
         this.gameRoom.id = this.player.gameRoomId;
 
-        console.log("created player, id: " + this.player.id + "; game room id: " + this.gameRoom.id);
+        //console.log("created player, id: " + this.player.id + "; game room id: " + this.gameRoom.id);
 
         this.refreshPlayers();
 
@@ -150,7 +151,7 @@ export class WizardComponent implements OnInit {
   }
 
   nextQuestion(isRetry: boolean = false) {
-    console.log('nextQuestion() called, questionNumber: ' + this.questionNumber);
+    //console.log('nextQuestion() called, questionNumber: ' + this.questionNumber);
 
     if (this.questionNumber == this.MAX_QUESTION) {
       this.getFinalScores();
@@ -255,7 +256,7 @@ export class WizardComponent implements OnInit {
             this.canRetry = true;
           }
         ).add(() => {
-          console.log("polling complete");
+          //console.log("polling complete");
           this.loading = false;
           this.setFocusOn(this._guessInput);
         });
@@ -278,8 +279,9 @@ export class WizardComponent implements OnInit {
 
         //TODO get all answers & poll
 
-        this.betAmountTotal = 0;
+        this.betsByUserAmount = 0;
         this.betsByUser = 0;
+        this.totalBetCount = 0;
 
         this.showGameBoard = true;
         this.page++;
@@ -343,7 +345,7 @@ export class WizardComponent implements OnInit {
       return;
     }
 
-    if ((this.betAmountTotal + this.bet.amount) > this.player.score) {
+    if ((this.betsByUserAmount + this.bet.amount) > this.player.score) {
       window.alert('You can\'t bet more chips than you have.');
       return;
     }
@@ -359,7 +361,7 @@ export class WizardComponent implements OnInit {
       (data: models.Bet) => {
         this.bet = data;
 
-        this.betAmountTotal += this.bet.amount;
+        this.betsByUserAmount += this.bet.amount;
         this.betsByUser++;
 
         this.showGameBoard = true;
@@ -382,7 +384,8 @@ export class WizardComponent implements OnInit {
       (data: models.Bet[]) => {
         var bets = data;
         this.gameApiService.setBets(this.laneData, bets);
-        this.allBetsIn = bets.length == this.players.length * 2;
+        this.totalBetCount = bets.length;
+        this.allBetsIn = this.totalBetCount == this.players.length * 2;
       },
       error => {
         //TODO handle
@@ -404,7 +407,7 @@ export class WizardComponent implements OnInit {
   }
 
   updateQuestionGetResults() {
-    console.log('updateQuestionGetResults() called, questionNumber: ' + this.questionNumber);
+    //console.log('updateQuestionGetResults() called, questionNumber: ' + this.questionNumber);
 
     if (this.player.isHost) {
       // Host updates the question with the correct answer...
@@ -429,7 +432,7 @@ export class WizardComponent implements OnInit {
         switchMap(() => this.gameApiService.getQuestion(this.gameRoom.id, this.questionNumber)),
 
         filter((data: models.Question) => {
-          console.log('got question, continue if answer is set: ' + JSON.stringify(data));
+          //console.log('got question, continue if answer is set: ' + JSON.stringify(data));
           return data && data.correctAnswer != null;
         }),
 
@@ -445,11 +448,12 @@ export class WizardComponent implements OnInit {
       },
         error => {
           //TODO handle
-          window.alert('Failed to get results: ' + error.error);
+          //TODO silent or notify?
+          //window.alert('Failed to get results: ' + error.error);
           console.log('error getting question results in wizard: ', error);
           this.canRetry = true;
         }
-      ).add(() => { console.log("polling complete"); this.loading = false; });
+      ).add(() => { /*console.log("polling complete");*/ this.loading = false; });
     }
   }
 
@@ -477,7 +481,8 @@ export class WizardComponent implements OnInit {
       },
       error => {
         //TODO handle
-        window.alert('Failed to get results: ' + error.error);
+        //TODO silent or notify?
+        //window.alert('Failed to get results: ' + error.error);
         console.log('error getting results in wizard: ', error);
       }
     ).add(() => { this.loading = false; });

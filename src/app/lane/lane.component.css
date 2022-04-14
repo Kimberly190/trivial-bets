@@ -11,7 +11,7 @@ h2 {
 
 .lane-space {
     position: relative;
-    max-height: 70%;
+    max-height: 36vh;
 
     display: flex;
     flex-direction: column;

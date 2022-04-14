@@ -116,6 +116,18 @@ button:hover {
     max-width: 10vw;
 }
 
+.narrow-bets .bet {
+    max-height: 8vh;
+}
+
+.narrow-lanes .narrow-bets .bet {
+    max-height: 4vh;
+}
+
+.narrow-lanes .lane-space {
+    flex-wrap: nowrap !important; /* TODO resolve */
+}
+
 .chip, .bet-button {
     max-width: min(10vw, 10vh);
     min-width: 3rem;
@@ -178,6 +190,13 @@ button:hover {
     }
     .narrow-lanes .player-card {
         max-width: revert;
+    }
+    .narrow-lanes .lane-space {
+        max-height: 12vh;
+    }
+    .narrow-bets .bet, .narrow-lanes .bet {
+        max-height: 6vh;
+        max-width: 8vw;
     }
 }
 
